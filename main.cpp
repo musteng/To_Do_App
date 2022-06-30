@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
      * QWidget: Must construct a QApplication before a QWidget
      * Before creating a main window object, QApplication must be created and initialized.
      */
-    MainWindow mainWindow = new MainWindow();
+    MainWindow mainWindow;
     mainWindow.show();
 
     return a.exec();
