@@ -43,10 +43,11 @@ private:
 
     InputDialogWindow inputDialogWindow;
     QFont font;
+
     QSettings settings;
     QSettings valueSettings;
-
     QStringList keys;
+
     QListWidgetItem* insertedItem;
     QLineEdit::EchoMode echoMode;
 

@@ -17,8 +17,8 @@ TaskList::TaskList(QWidget *parent)
     , windowHeight(525)
     , font("Geneva")
     , fontSize(15)
-    , settings("To_Do_App", "To_Do_App") // settings("/Users/mustafacevik/Desktop/savedItems.txt", QSettings::Format::IniFormat)
-    //, settings( "/Users/mustafacevik/Desktop/savedTasks", QSettings::Format::NativeFormat)
+    //, settings("To_Do_App", "To_Do_App") // settings("/Users/mustafacevik/Desktop/savedItems.txt", QSettings::Format::IniFormat)
+    , settings( "/Users/mustafacevik/Desktop/savedTasks", QSettings::Format::IniFormat)
     , echoMode(QLineEdit::Normal)
     , addPopUpTitle("Add Task")
     , addPopUpLabel("Add a Task To List")
@@ -41,12 +41,12 @@ TaskList::TaskList(QWidget *parent)
 
     settings.beginGroup("myKeys");
     keys = settings.childKeys();
-    loadTasks();
+    //loadTasks();
     //settings.clear();
     //settings.setPath(QSettings::Format::NativeFormat, QSettings::Scope::SystemScope, "/Users/mustafacevik/Desktop/savedTasks");
     //this->setStyleSheet("QListView
     // { selection-color: white }");
-    // settings.setPath(QSettings::Format::NativeFormat, QSettings::Scope::UserScope, "/Users/mustafacevik/Desktop/savedTasks");
+    settings.setPath(QSettings::Format::IniFormat, QSettings::Scope::UserScope, "/Users/mustafacevik/Desktop/savedTasks");
     //this->setStyleSheet( "QListWidget{ background: black;}");
     //this->addItem(items.value("1").toString());
 }
@@ -63,6 +63,7 @@ void TaskList::handleAddButton() {
     bool okClicked;
     QString userInput = inputDialogWindow.getText(this, addPopUpTitle, addPopUpLabel,
                                                   echoMode, addPopUpInitialText, &okClicked);
+
     if (okClicked && !userInput.isEmpty()){
         this->addItem(userInput);
         settings.setValue(rowStr2, userInput);
@@ -129,4 +130,5 @@ void TaskList::loadTasks() {
 
 void TaskList::mouseDoubleClickEvent(QMouseEvent *event) {
     this->clearSelection();
+    //TODO single click
 }
