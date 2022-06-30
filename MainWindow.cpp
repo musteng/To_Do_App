@@ -53,9 +53,15 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
-    deleteButton->setGeometry(QRect(QPoint((this->taskList->width() - 180)/2 + 85, 5), QSize(60, 40)));
-    updateButton->setGeometry(QRect(QPoint(this->width() - 85, 5), QSize(60, 40)));
+
+    deleteButton->setGeometry(QRect(QPoint((this->taskList->width() - 180)/2 + 85, 5),
+                                    QSize(60, 40)));
+
+    updateButton->setGeometry(QRect(QPoint(this->width() - 85, 5),
+                                    QSize(60, 40)));
+
     this->taskList->resize(this->width() - 50, this->height() - 75);
+
 }
 
 
