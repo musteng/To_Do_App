@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include "InputDialogWindow.h"
 #include <QSettings>
+#include <QDateTime>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class TaskList; }
@@ -43,14 +44,19 @@ private:
     InputDialogWindow inputDialogWindow;
     QFont font;
     QSettings settings;
-    QStringList keys = settings.allKeys();
+    QSettings valueSettings;
+
+    QStringList keys;
     QListWidgetItem* insertedItem;
     QLineEdit::EchoMode echoMode;
+
     QString addPopUpTitle;
     QString addPopUpLabel;
     QString addPopUpInitialText;
     QString updatePupUpTitle;
     QString updatePupUpLabel;
+
+    QDateTime time;
 };
 
 
