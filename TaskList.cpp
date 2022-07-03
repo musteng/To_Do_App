@@ -58,6 +58,7 @@ void TaskList::handleAddButton() {
         item->endDate = dialogWindow->endingTime->text();
         item->importance = dialogWindow->priorityLevel->currentText();
         listItemVector.push_back(item);
+        this->fileWrite();
     }
 }
 
@@ -69,6 +70,7 @@ void TaskList::handleDeleteButton() {
         listItemVector.erase(listItemVector.begin() + selectedIndex);
         this->takeItem(selectedIndex);
         this->clearSelection();
+        this->fileWrite();
     }
 }
 
@@ -100,6 +102,7 @@ void TaskList::handleUpdateButton() {
             this->takeItem(selectedRowNo);
             this->insertItem(selectedRowNo,userInput);
             this->clearSelection();
+            this->fileWrite();
         }
     }
 }
