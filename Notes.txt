@@ -1,7 +1,0 @@
-Simple Hello World screen:
-    QApplication a(argc, argv);
-    QPushButton button("Hello world!", nullptr);
-    button.resize(550, 550);
-    button.show();
-    return QApplication::exec();
-
