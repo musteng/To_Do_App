@@ -64,5 +64,6 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 
 }
 
-
-
+void MainWindow::closeEvent(QCloseEvent *event) {
+    taskList->fileWrite();
+}

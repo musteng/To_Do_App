@@ -16,39 +16,23 @@ TaskList::TaskList(QWidget *parent)
     , windowWidth(450)
     , windowHeight(525)
     , font("Geneva")
-    , fontSize(15)
-    , settings("To_Do_App", "To_Do_App") // settings("/Users/mustafacevik/Desktop/savedItems.txt", QSettings::Format::IniFormat)
-    //, settings( "/Users/mustafacevik/Desktop/savedTasks", QSettings::Format::IniFormat)
-    , echoMode(QLineEdit::Normal)
-    , addPopUpTitle("Add Task")
-    , addPopUpLabel("Add a Task To List")
-    , addPopUpInitialText("")
-    , updatePupUpTitle("Update Task")
-    , updatePupUpLabel("Update the Task")
-    , valueSettings("To_Do_App", "To_Do_App_Values")
+    , fontSize(14)
 {
     ui->setupUi(this);
     this->setGeometry(QRect(QPoint(positionX, positionY),QSize(windowWidth, windowHeight)));
     this->setAlternatingRowColors(true);
     font.setPointSize(fontSize);
+    font.setWeight(QFont::Weight::Light);
     font.setLetterSpacing(QFont::SpacingType::AbsoluteSpacing,static_cast<qreal>(1));
     this->setFont(font);
-    this->setStyleSheet("QListWidget::item { height: 35px; }"
+    this->setStyleSheet("QListWidget::item { height: 75px; }"
+                            "QListWidget::item { width: 100; }"
                             "QListView::item { selection-color: white }"
                             "QListView::item { selection-background-color: #3344de}"
                             "QListView::item:hover { background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-                                "stop: 0 #535c75, stop: 1 #414fd1)}");
-
-    settings.beginGroup("myKeys");
-    keys = settings.childKeys();
-    loadTasks();
-    //settings.clear();
-    //settings.setPath(QSettings::Format::NativeFormat, QSettings::Scope::SystemScope, "/Users/mustafacevik/Desktop/savedTasks");
-    //this->setStyleSheet("QListView
-    // { selection-color: white }");
-    //settings.setPath(QSettings::Format::IniFormat, QSettings::Scope::UserScope, "/Users/mustafacevik/Desktop/savedTasks");
-    //this->setStyleSheet( "QListWidget{ background: black;}");
-    //this->addItem(items.value("1").toString());
+                                "stop: 0 #414fd1, stop: 1 #414fd1)}");
+    file.setFileName("/Users/mustafacevik/Desktop/savedItemsTry.txt");
+    this->fileRead();
 }
 
 TaskList::~TaskList() {
@@ -56,79 +40,112 @@ TaskList::~TaskList() {
 }
 
 void TaskList::handleAddButton() {
-    int row = this->count();
-    unsigned int uniqueTime = time.currentSecsSinceEpoch();
-    QString rowStr2 = QString::number(uniqueTime);
-    QString rowStr = QString::number(row);
-    bool okClicked;
-    QString userInput = inputDialogWindow.getText(this, addPopUpTitle, addPopUpLabel,
-                                                  echoMode, addPopUpInitialText, &okClicked);
+    dialogWindow = new DialogWindow(QString("Add Task"));
 
-    if (okClicked && !userInput.isEmpty()){
+    if( dialogWindow->exec() == QDialog::Accepted ) {
+        item = new ListItem;
+        unsigned int uniqueTime = QDateTime::currentSecsSinceEpoch();
+
+        QString userInputText = dialogWindow->inputText->text();
+        QString userInputDate = dialogWindow->endingTime->text();
+        QString userInputPriority = dialogWindow->priorityLevel->currentText();
+
+        QString userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
         this->addItem(userInput);
-        settings.setValue(rowStr2, userInput);
-        valueSettings.setValue(userInput, rowStr2);
-        //settings.setValue(rowStr, userInput);
-        //insertedItem = this->item(row);
-        //insertedItem->setSizeHint(QSize(35,35));
-    }
 
-    /**
-    this->inputDialogWindow.exec();
-    QString userInput = this->inputDialogWindow.textValue();
-    this->addItem(userInput);
-    */
+        item->itemId = uniqueTime;
+        item->userInput = dialogWindow->inputText->text();
+        item->endDate = dialogWindow->endingTime->text();
+        item->importance = dialogWindow->priorityLevel->currentText();
+        listItemVector.push_back(item);
+    }
 }
+
 
 void TaskList::handleDeleteButton() {
     int selectedIndex = this->currentRow();
 
     if (selectedIndex != -1) {
-        QString selectedItem = this->currentItem()->text();
-        QString deletedItem = valueSettings.value(selectedItem).toString();
-        QListWidgetItem *item = this->currentItem();
-        QString key = QString::number(selectedIndex);
+        listItemVector.erase(listItemVector.begin() + selectedIndex);
         this->takeItem(selectedIndex);
-        //settings.remove(item->text());
-        settings.remove(deletedItem);
         this->clearSelection();
     }
 }
 
+
 void TaskList::handleUpdateButton() {
+    bool ok;
     int selectedRowNo = this->currentRow();
+    ListItem* selectedItem;
+
     if( selectedRowNo != -1) {
-        QString updatedRow = this->currentItem()->text();
-        QString updateRowKey = valueSettings.value(updatedRow).toString();
-        QListWidgetItem *selectedItem = this->currentItem();
-        QString textToBeUpdated = selectedItem->text();
-        settings.remove(updateRowKey);
-        bool okClicked;
-        QString updatedInput = inputDialogWindow.getText(this, updatePupUpTitle, updatePupUpLabel,
-                                                         echoMode, textToBeUpdated, &okClicked);
-        if (okClicked && !updatedInput.isEmpty()) {
+        dialogWindow = new DialogWindow(QString("Update Task"));
+        selectedItem = listItemVector[selectedRowNo];
+
+        dialogWindow->inputText->setText(selectedItem->userInput);
+        QStringList dateValues = selectedItem->endDate.split('.');
+        dialogWindow->endingTime->setDate( QDate(dateValues[2].toInt(&ok, 10),dateValues[1].toInt(&ok, 10),dateValues[0].toInt(&ok, 10)));
+        dialogWindow->priorityLevel->setCurrentText(selectedItem->importance);
+
+        if (dialogWindow->exec() == QDialog::Accepted){
+            QString userInputText = dialogWindow->inputText->text();
+            QString userInputDate = dialogWindow->endingTime->text();
+            QString userInputPriority = dialogWindow->priorityLevel->currentText();
+            QString userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
+
+            listItemVector[selectedRowNo]->userInput = dialogWindow->inputText->text();
+            listItemVector[selectedRowNo]->endDate = dialogWindow->endingTime->text();
+            listItemVector[selectedRowNo]->importance = dialogWindow->priorityLevel->currentText();
+
             this->takeItem(selectedRowNo);
-            this->insertItem(selectedRowNo,updatedInput);
-            settings.setValue(updateRowKey, updatedInput);
-            valueSettings.setValue(updatedInput, updateRowKey);
+            this->insertItem(selectedRowNo,userInput);
             this->clearSelection();
         }
     }
-    /**
-    inputDialogWindow.exec();
-    int selectedRowNo = this->currentRow();
-    this->takeItem(selectedRowNo);
-    this->insertItem(selectedRowNo, inputDialogWindow.textValue());
-    */
 }
 
-void TaskList::loadTasks() {
-    for(const QString& key : keys){
-        this->addItem((settings.value(key).toString()));
-    }
-}
 
 void TaskList::mouseDoubleClickEvent(QMouseEvent *event) {
     this->clearSelection();
-    //TODO single click
+    //TODO one click
+}
+
+
+void TaskList::fileWrite() {
+    file.open(QIODeviceBase::ReadWrite);
+    QTextStream out(&file);
+    file.resize(0);
+
+    for (auto & i : listItemVector){
+        out << i->itemId << ", " << i->userInput << ", " << i->endDate << ", " << i->importance << "\n";
+    }
+    file.close();
+}
+
+
+void TaskList::fileRead() {
+    file.open(QIODeviceBase::ReadWrite);
+    QString line;
+    QStringList lineValues;
+
+    while(!file.atEnd()){
+        item = new ListItem;
+        line = file.readLine();
+        if(line == "\n")
+            continue;
+        lineValues = line.split(", ");
+        item->itemId = lineValues[0].toUInt();
+        item->userInput = lineValues[1];
+        item->endDate = lineValues[2];
+        item->importance = lineValues[3];
+        listItemVector.push_back(item);
+
+        QString userInputText = item->userInput;
+        QString userInputDate = item->endDate;
+        QString userInputPriority = item->importance;
+
+        QString userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
+        this->addItem(userInput);
+    }
+    file.close();
 }

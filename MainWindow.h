@@ -16,6 +16,7 @@
 #include "InputDialogWindow.h"
 #include <QDebug>
 #include "TaskList.h"
+#include "ListItem.h"
 #include <QListWidgetItem>
 
 
@@ -30,7 +31,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
     void resizeEvent(QResizeEvent *event) override;
-
+    void closeEvent(QCloseEvent* event) override;
 
 private:
     Ui::MainWindow *ui;

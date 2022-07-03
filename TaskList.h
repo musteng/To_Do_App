@@ -12,6 +12,11 @@
 #include "InputDialogWindow.h"
 #include <QSettings>
 #include <QDateTime>
+#include "ListItem.h"
+#include "DialogWindow.h"
+#include <vector>
+#include <iostream>
+#include <QFile>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class TaskList; }
@@ -28,8 +33,11 @@ public:
     void handleAddButton();
     void handleDeleteButton();
     void handleUpdateButton();
-    void loadTasks();
     void mouseDoubleClickEvent(QMouseEvent* event) override;
+    void fileWrite();
+    void fileRead();
+
+    std::vector<ListItem*> listItemVector;
 
 private:
     Ui::TaskList *ui;
@@ -41,23 +49,10 @@ private:
     int windowHeight;
     int fontSize;
 
-    InputDialogWindow inputDialogWindow;
     QFont font;
-
-    QSettings settings;
-    QSettings valueSettings;
-    QStringList keys;
-
-    QListWidgetItem* insertedItem;
-    QLineEdit::EchoMode echoMode;
-
-    QString addPopUpTitle;
-    QString addPopUpLabel;
-    QString addPopUpInitialText;
-    QString updatePupUpTitle;
-    QString updatePupUpLabel;
-
-    QDateTime time;
+    QFile file;
+    ListItem* item;
+    DialogWindow* dialogWindow;
 };
 
 
