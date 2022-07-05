@@ -5,6 +5,8 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_TaskList.h" resolved
 
 #include "TaskList.h"
+
+#include <utility>
 #include "ui_TaskList.h"
 
 
@@ -46,18 +48,13 @@ void TaskList::handleAddButton() {
         item = new ListItem;
         unsigned int uniqueTime = QDateTime::currentSecsSinceEpoch();
 
-        QString userInputText = dialogWindow->inputText->text();
-        QString userInputDate = dialogWindow->endingTime->text();
-        QString userInputPriority = dialogWindow->priorityLevel->currentText();
+        this->addItem(addItemToList(dialogWindow));
+        addItemToVector(item,
+                        uniqueTime,
+                        dialogWindow->inputText->text(),
+                        dialogWindow->endingTime->text(),
+                        dialogWindow->priorityLevel->currentText());
 
-        QString userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
-        this->addItem(userInput);
-
-        item->itemId = uniqueTime;
-        item->userInput = dialogWindow->inputText->text();
-        item->endDate = dialogWindow->endingTime->text();
-        item->importance = dialogWindow->priorityLevel->currentText();
-        listItemVector.push_back(item);
         FileController::fileWrite(listItemVector);
     }
 }
@@ -90,17 +87,9 @@ void TaskList::handleUpdateButton() {
         dialogWindow->priorityLevel->setCurrentText(selectedItem->importance);
 
         if (dialogWindow->exec() == QDialog::Accepted){
-            QString userInputText = dialogWindow->inputText->text();
-            QString userInputDate = dialogWindow->endingTime->text();
-            QString userInputPriority = dialogWindow->priorityLevel->currentText();
-            QString userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
-
-            listItemVector[selectedRowNo]->userInput = dialogWindow->inputText->text();
-            listItemVector[selectedRowNo]->endDate = dialogWindow->endingTime->text();
-            listItemVector[selectedRowNo]->importance = dialogWindow->priorityLevel->currentText();
-
+            updateVectorItem(listItemVector, selectedRowNo);
             this->takeItem(selectedRowNo);
-            this->insertItem(selectedRowNo,userInput);
+            this->insertItem(selectedRowNo,addItemToList(dialogWindow));
             this->clearSelection();
             FileController::fileWrite(listItemVector);
         }
@@ -127,4 +116,29 @@ void TaskList::itemVectorToList(std::vector<ListItem*>& itemVector){
         userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
         this->addItem(userInput);
     }
+}
+
+
+void TaskList::addItemToVector(ListItem* addedItem, unsigned int id, QString userInput, QString endingTime, QString priorityLevel) {
+    addedItem->itemId = id;
+    addedItem->userInput = userInput;
+    addedItem->endDate = endingTime;
+    addedItem->importance = priorityLevel;
+    listItemVector.push_back(addedItem);
+}
+
+
+QString TaskList::addItemToList(DialogWindow* windowValues) {
+    QString userInputText = windowValues->inputText->text();
+    QString userInputDate = windowValues->endingTime->text();
+    QString userInputPriority = windowValues->priorityLevel->currentText();
+    QString addedTask = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
+    return addedTask;
+}
+
+
+void TaskList::updateVectorItem(std::vector<ListItem*>& itemVector, int selectedRow) {
+    itemVector[selectedRow]->userInput = dialogWindow->inputText->text();
+    itemVector[selectedRow]->endDate = dialogWindow->endingTime->text();
+    itemVector[selectedRow]->importance = dialogWindow->priorityLevel->currentText();
 }

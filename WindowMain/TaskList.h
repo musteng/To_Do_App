@@ -37,6 +37,9 @@ public:
     void handleUpdateButton();
     void mouseDoubleClickEvent(QMouseEvent* event) override;
     void itemVectorToList(std::vector<ListItem*>& listItemVector);
+    static QString addItemToList(DialogWindow* windowValues);
+    void addItemToVector(ListItem* addedItem, unsigned int id, QString userInput, QString endingTime, QString priorityLevel);
+    void updateVectorItem(std::vector<ListItem*>& itemVector, int selectedRow);
 
     std::vector<ListItem*> listItemVector;
 

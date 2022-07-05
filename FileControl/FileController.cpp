@@ -34,6 +34,7 @@ void FileController::fileWrite(std::vector<ListItem*>& itemVector) {
     file.setFileName("/Users/mustafacevik/Desktop/savedItemsTry.txt");
     file.open(QIODeviceBase::ReadWrite);
     QTextStream out(&file);
+    file.resize(0);
 
     for (ListItem* i : itemVector){
         out << i->itemId << ", " << i->userInput << ", " << i->endDate << ", " << i->importance << Qt::endl;
