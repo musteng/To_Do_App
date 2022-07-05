@@ -58,8 +58,6 @@ void TaskList::handleAddButton() {
         item->endDate = dialogWindow->endingTime->text();
         item->importance = dialogWindow->priorityLevel->currentText();
         listItemVector.push_back(item);
-        //this->fileWrite();
-        //FileController::myFile.setFileName("/Users/mustafacevik/Desktop/savedItemsTry.txt");
         FileController::fileWrite(listItemVector);
     }
 }
