@@ -81,7 +81,9 @@ void TaskList::handleUpdateButton() {
 
         dialogWindow->inputText->setText(selectedItem->userInput);
         QStringList dateValues = selectedItem->endDate.split('.');
-        dialogWindow->endingTime->setDate( QDate(dateValues[2].toInt(&ok, 10),dateValues[1].toInt(&ok, 10),dateValues[0].toInt(&ok, 10)));
+        dialogWindow->endingTime->setDate( QDate(dateValues[2].toInt(&ok, 10),
+                                                    dateValues[1].toInt(&ok, 10),
+                                                    dateValues[0].toInt(&ok, 10)));
         dialogWindow->priorityLevel->setCurrentText(selectedItem->importance);
 
         if (dialogWindow->exec() == QDialog::Accepted){
