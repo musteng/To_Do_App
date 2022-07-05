@@ -20,7 +20,7 @@ set(PROJECT_SOURCES
         InputDialogWindow.cpp InputDialogWindow.h InputDialogWindow.ui
         TaskList.cpp TaskList.h TaskList.ui
         ListItem.cpp ListItem.h
-        DialogWindow.cpp DialogWindow.h DialogWindow.ui)
+        DialogWindow.cpp DialogWindow.h DialogWindow.ui FileController.cpp FileController.h)
 
 add_executable(To_Do_App ${PROJECT_SOURCES})
 
