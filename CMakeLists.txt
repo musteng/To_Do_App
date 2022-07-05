@@ -30,3 +30,4 @@ target_link_libraries(To_Do_App
         Qt::Gui
         Qt::Widgets)
 
+include_directories("${PROJECT_SOURCE_DIR}/inc/")
