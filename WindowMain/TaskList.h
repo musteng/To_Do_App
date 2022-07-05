@@ -18,7 +18,7 @@
 #include <QFile>
 #include <QTextFormat>
 #include "../FileControl/FileController.h"
-
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class TaskList; }

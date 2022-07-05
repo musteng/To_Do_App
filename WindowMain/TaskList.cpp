@@ -5,8 +5,6 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_TaskList.h" resolved
 
 #include "TaskList.h"
-
-#include <utility>
 #include "ui_TaskList.h"
 
 
@@ -121,7 +119,7 @@ void TaskList::itemVectorToList(std::vector<ListItem*>& itemVector){
 
 void TaskList::addItemToVector(ListItem* addedItem, unsigned int id, QString userInput, QString endingTime, QString priorityLevel) {
     addedItem->itemId = id;
-    addedItem->userInput = userInput;
+    addedItem->userInput = std::move(userInput);
     addedItem->endDate = endingTime;
     addedItem->importance = priorityLevel;
     listItemVector.push_back(addedItem);
