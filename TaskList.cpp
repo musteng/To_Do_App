@@ -31,8 +31,8 @@ TaskList::TaskList(QWidget *parent)
                             "QListView::item { selection-background-color: #3344de}"
                             "QListView::item:hover { background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
                                 "stop: 0 #414fd1, stop: 1 #414fd1)}");
-    file.setFileName("/Users/mustafacevik/Desktop/savedItemsTry.txt");
-    this->fileRead();
+    FileController::fileRead(listItemVector);
+    itemVectorToList(listItemVector);
 }
 
 TaskList::~TaskList() {
@@ -58,7 +58,9 @@ void TaskList::handleAddButton() {
         item->endDate = dialogWindow->endingTime->text();
         item->importance = dialogWindow->priorityLevel->currentText();
         listItemVector.push_back(item);
-        this->fileWrite();
+        //this->fileWrite();
+        //FileController::myFile.setFileName("/Users/mustafacevik/Desktop/savedItemsTry.txt");
+        FileController::fileWrite(listItemVector);
     }
 }
 
@@ -70,7 +72,7 @@ void TaskList::handleDeleteButton() {
         listItemVector.erase(listItemVector.begin() + selectedIndex);
         this->takeItem(selectedIndex);
         this->clearSelection();
-        this->fileWrite();
+        FileController::fileWrite(listItemVector);
     }
 }
 
@@ -102,7 +104,7 @@ void TaskList::handleUpdateButton() {
             this->takeItem(selectedRowNo);
             this->insertItem(selectedRowNo,userInput);
             this->clearSelection();
-            this->fileWrite();
+            FileController::fileWrite(listItemVector);
         }
     }
 }
@@ -114,41 +116,17 @@ void TaskList::mouseDoubleClickEvent(QMouseEvent *event) {
 }
 
 
-void TaskList::fileWrite() {
-    file.open(QIODeviceBase::ReadWrite);
-    QTextStream out(&file);
-    file.resize(0);
+void TaskList::itemVectorToList(std::vector<ListItem*>& itemVector){
+    QString userInputText;
+    QString userInputDate;
+    QString userInputPriority;
+    QString userInput;
 
-    for (auto & i : listItemVector){
-        out << i->itemId << ", " << i->userInput << ", " << i->endDate << ", " << i->importance << "\n";
-    }
-    file.close();
-}
-
-
-void TaskList::fileRead() {
-    file.open(QIODeviceBase::ReadWrite);
-    QString line;
-    QStringList lineValues;
-
-    while(!file.atEnd()){
-        item = new ListItem;
-        line = file.readLine();
-        if(line == "\n")
-            continue;
-        lineValues = line.split(", ");
-        item->itemId = lineValues[0].toUInt();
-        item->userInput = lineValues[1];
-        item->endDate = lineValues[2];
-        item->importance = lineValues[3];
-        listItemVector.push_back(item);
-
-        QString userInputText = item->userInput;
-        QString userInputDate = item->endDate;
-        QString userInputPriority = item->importance;
-
-        QString userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
+    for(ListItem* element : itemVector){
+        userInputText = element->userInput;
+        userInputDate = element->endDate;
+        userInputPriority = element->importance ;
+        userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
         this->addItem(userInput);
     }
-    file.close();
 }

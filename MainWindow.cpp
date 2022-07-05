@@ -63,7 +63,3 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
     this->taskList->resize(this->width() - 50, this->height() - 75);
 
 }
-
-void MainWindow::closeEvent(QCloseEvent *event) {
-    taskList->fileWrite();
-}

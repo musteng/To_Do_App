@@ -15,8 +15,10 @@
 #include "ListItem.h"
 #include "DialogWindow.h"
 #include <vector>
-#include <iostream>
 #include <QFile>
+#include <QTextFormat>
+#include "FileController.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class TaskList; }
@@ -34,8 +36,7 @@ public:
     void handleDeleteButton();
     void handleUpdateButton();
     void mouseDoubleClickEvent(QMouseEvent* event) override;
-    void fileWrite();
-    void fileRead();
+    void itemVectorToList(std::vector<ListItem*>& listItemVector);
 
     std::vector<ListItem*> listItemVector;
 
@@ -50,7 +51,6 @@ private:
     int fontSize;
 
     QFont font;
-    QFile file;
     ListItem* item;
     DialogWindow* dialogWindow;
 };
