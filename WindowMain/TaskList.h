@@ -9,15 +9,15 @@
 #include <QPalette>
 #include <QColor>
 #include <QPushButton>
-#include "../dialogWindow/InputDialogWindow.h"
+#include "../WindowDialog/InputDialogWindow.h"
 #include <QSettings>
 #include <QDateTime>
 #include "ListItem.h"
-#include "../dialogWindow/DialogWindow.h"
+#include "../WindowDialog/DialogWindow.h"
 #include <vector>
 #include <QFile>
 #include <QTextFormat>
-#include "../fileControl/FileController.h"
+#include "../FileControl/FileController.h"
 
 
 QT_BEGIN_NAMESPACE

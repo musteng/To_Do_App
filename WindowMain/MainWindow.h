@@ -13,7 +13,7 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <iostream>
-#include "../dialogWindow/InputDialogWindow.h"
+#include "../WindowDialog/InputDialogWindow.h"
 #include <QDebug>
 #include "TaskList.h"
 #include "ListItem.h"
