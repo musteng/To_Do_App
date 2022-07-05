@@ -8,7 +8,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <vector>
-#include "ListItem.h"
+#include "../mainWindowItems/ListItem.h"
 
 
 class FileController {

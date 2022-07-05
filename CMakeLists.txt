@@ -16,12 +16,12 @@ find_package(Qt6 COMPONENTS
 
 set(PROJECT_SOURCES
         main.cpp
-        MainWindow.cpp MainWindow.h MainWindow.ui
-        InputDialogWindow.cpp InputDialogWindow.h InputDialogWindow.ui
-        TaskList.cpp TaskList.h TaskList.ui
-        ListItem.cpp ListItem.h
-        DialogWindow.cpp DialogWindow.h DialogWindow.ui
-        FileController.cpp FileController.h)
+        mainWindowItems/MainWindow.cpp mainWindowItems/MainWindow.h mainWindowItems/MainWindow.ui
+        dialogWindow/InputDialogWindow.cpp dialogWindow/InputDialogWindow.h dialogWindow/InputDialogWindow.ui
+        mainWindowItems/TaskList.cpp mainWindowItems/TaskList.h mainWindowItems/TaskList.ui
+        mainWindowItems/ListItem.cpp mainWindowItems/ListItem.h
+        dialogWindow/DialogWindow.cpp dialogWindow/DialogWindow.h dialogWindow/DialogWindow.ui
+        fileControl/FileController.cpp fileControl/FileController.h)
 
 add_executable(To_Do_App ${PROJECT_SOURCES})
 

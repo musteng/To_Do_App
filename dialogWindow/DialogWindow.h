@@ -13,7 +13,7 @@
 #include <QDateTimeEdit>
 #include <QLineEdit>
 #include <QComboBox>
-#include "ListItem.h"
+#include "../mainWindowItems/ListItem.h"
 
 
 QT_BEGIN_NAMESPACE
