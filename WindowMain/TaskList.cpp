@@ -26,6 +26,9 @@ TaskList::TaskList(QWidget *parent)
     font.setLetterSpacing(QFont::SpacingType::AbsoluteSpacing,static_cast<qreal>(1));
     this->setFont(font);
     this->setStyleSheet("QListWidget::item { height: 75px; }"
+                            "QListWidget::item:alternate { background-color: #bfffbf; }"
+                            "QListWidget::item { background-color: #deffde; }"
+                            "QListWidget {background-color : black};"
                             "QListWidget::item { width: 100; }"
                             "QListView::item { selection-color: white }"
                             "QListView::item { selection-background-color: #3344de}"
@@ -41,11 +44,9 @@ TaskList::~TaskList() {
 
 void TaskList::handleAddButton() {
     dialogWindow = new DialogWindow(QString("Add Task"));
-
     if( dialogWindow->exec() == QDialog::Accepted ) {
         item = new ListItem;
         unsigned int uniqueTime = QDateTime::currentSecsSinceEpoch();
-
         this->addItem(addItemToList(dialogWindow));
         addItemToVector(item,
                         uniqueTime,

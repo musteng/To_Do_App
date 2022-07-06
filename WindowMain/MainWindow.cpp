@@ -21,12 +21,14 @@ MainWindow::MainWindow(QWidget *parent)
     , fontSize(12)
 {
     ui->setupUi(this);
+    this->setStyleSheet("MainWindow {background-color : #49494d};");
     this->setWindowTitle(windowTitle);
     this->resize(windowWidth, windowHeight);
     this->setMaximumSize(maxWindowWidth, maxWindowHeight);
     this->setMinimumSize(minWindowWidth, minWindowHeight);
     this->taskList = new TaskList(this);
     font.setPointSize(fontSize);
+
 
     addButton = new QPushButton("Add", this);
     addButton->setFont(font);
