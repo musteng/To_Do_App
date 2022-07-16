@@ -35,15 +35,17 @@ TaskList::TaskList(QWidget *parent)
                             "QListView::item:hover { background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
                                 "stop: 0 #414fd1, stop: 1 #414fd1)}");
     FileController::fileRead(listItemVector);
-    //itemVectorToList(listItemVector);
+    //itemVectorToList(listItemVector); // from file to app list
     dbItem = new DatabaseHandler();
-    //dbItem->getData();
-    this->databaseToList(dbItem->networkReply());
+    dbData = dbItem->getData();
+    this->databaseToList(dbData);
 }
+
 
 TaskList::~TaskList() {
     delete ui;
 }
+
 
 void TaskList::handleAddButton() {
     dialogWindow = new DialogWindow(QString("Add Task"));
@@ -87,17 +89,19 @@ void TaskList::handleUpdateButton() {
     bool ok;
     int selectedRowNo = this->currentRow();
     ListItem* selectedItem;
+    DatabaseItem* selectedItemDBVector;
 
     if( selectedRowNo != -1) {
         dialogWindow = new DialogWindow(QString("Update Task"));
         selectedItem = listItemVector[selectedRowNo];
+        selectedItemDBVector = dbItem->listItemVectorDB[selectedRowNo];
 
-        dialogWindow->inputText->setText(selectedItem->userInput);
-        QStringList dateValues = selectedItem->endDate.split('.');
+        dialogWindow->inputText->setText(selectedItemDBVector->userInput);
+        QStringList dateValues = selectedItemDBVector->endingDate.split('.');
         dialogWindow->endingTime->setDate( QDate(dateValues[2].toInt(&ok, 10),
                                                     dateValues[1].toInt(&ok, 10),
                                                     dateValues[0].toInt(&ok, 10)));
-        dialogWindow->priorityLevel->setCurrentText(selectedItem->importance);
+        dialogWindow->priorityLevel->setCurrentText(selectedItemDBVector->priorityLevel);
 
         if (dialogWindow->exec() == QDialog::Accepted){
             updateVectorItem(listItemVector, selectedRowNo);
@@ -163,7 +167,7 @@ void TaskList::updateVectorItem(std::vector<ListItem*>& itemVector, int selected
 }
 
 
-void TaskList::databaseToList(std::vector<DatabaseItem *> dbItemList) {
+void TaskList::databaseToList(std::vector<DatabaseItem*>& dbItemList) {
     QString userInputText;
     QString userInputDate;
     QString userInputPriority;

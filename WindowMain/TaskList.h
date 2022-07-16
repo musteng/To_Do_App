@@ -44,7 +44,7 @@ public:
     static QString addItemToList(DialogWindow* windowValues);
     void addItemToVector(ListItem* addedItem, unsigned int id, QString userInput, QString endingTime, QString priorityLevel);
     void updateVectorItem(std::vector<ListItem*>& itemVector, int selectedRow);
-    void databaseToList(std::vector<DatabaseItem*> dbItemList);
+    void databaseToList(std::vector<DatabaseItem*>& dbItemList);
 
     std::vector<ListItem*> listItemVector;
 
@@ -62,6 +62,7 @@ private:
     ListItem* item;
     DialogWindow* dialogWindow;
     DatabaseHandler* dbItem;
+    std::vector<DatabaseItem*> dbData;
 };
 
 

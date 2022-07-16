@@ -3,37 +3,26 @@
 //
 
 #include "DatabaseHandler.h"
-#include <QEventLoop>
+
 
 DatabaseHandler::DatabaseHandler(QObject *parent)
     : QObject(parent)
 {
-    ///m_networkAccessManager = new QNetworkAccessManager(this);
+    m_networkAccessManager = new QNetworkAccessManager(this);
 }
 
 
 DatabaseHandler::~DatabaseHandler() {
-    ///m_networkAccessManager->deleteLater();
+    m_networkAccessManager->deleteLater();
 }
 
 
-void DatabaseHandler::getData() {
-    m_networkAccessManager = new QNetworkAccessManager(this);
+std::vector<DatabaseItem*> DatabaseHandler::getData() {
     m_networkReply = this->m_networkAccessManager->get(QNetworkRequest(QUrl("https://todoapp-c3d85-default-rtdb.europe-west1.firebasedatabase.app/ItemList.json")));
-    connect(m_networkReply, &QNetworkReply::readyRead, this, &DatabaseHandler::networkReply);
-}
-
-
-std::vector<DatabaseItem*> DatabaseHandler::networkReply() {
-    m_networkAccessManager = new QNetworkAccessManager(this);
-    m_networkReply = this->m_networkAccessManager->get(QNetworkRequest(QUrl("https://todoapp-c3d85-default-rtdb.europe-west1.firebasedatabase.app/ItemList.json")));
-
-    QEventLoop loop;
     connect(m_networkReply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
 
     QByteArray responseData = m_networkReply->readAll();
-    qInfo() << responseData;
     QJsonDocument json = QJsonDocument::fromJson(responseData);
     QJsonObject jsonObject = json.object();
 
@@ -67,21 +56,6 @@ void DatabaseHandler::postData() {
 }
 
 
-
-void DatabaseHandler::itemToVector() {
-    QByteArray itemKey = m_networkReply->readAll().split(':')[1];
-    itemKey.chop(2);
-    itemKey.remove(0, 1);
-    qInfo() << itemKey;
-
-    listItemDB->dbID = itemKey;
-    listItemDB->userInput = this->listItemDB->userInput;
-    listItemDB->endingDate = this->listItemDB->endingDate;
-    listItemDB->priorityLevel = this->listItemDB->priorityLevel;
-    listItemVectorDB.push_back(listItemDB);
-}
-
-
 void DatabaseHandler::deleteData(int selectedRowNumber) {
     QString dbKey = listItemVectorDB[selectedRowNumber]->dbID;
     newRequest = new QNetworkRequest( QUrl("https://todoapp-c3d85-default-rtdb.europe-west1.firebasedatabase.app/ItemList/" + dbKey + ".json"));
@@ -108,4 +82,18 @@ void DatabaseHandler::updateData(int selectedRowNumber) {
     listItemVectorDB[selectedRowNumber]->userInput = this->listItemDB->userInput;
     listItemVectorDB[selectedRowNumber]->priorityLevel = this->listItemDB->priorityLevel;
     listItemVectorDB[selectedRowNumber]->endingDate = this->listItemDB->endingDate;
+}
+
+
+void DatabaseHandler::itemToVector() {
+    QByteArray itemKey = m_networkReply->readAll().split(':')[1];
+    itemKey.chop(2);
+    itemKey.remove(0, 1);
+    qInfo() << itemKey;
+
+    listItemDB->dbID = itemKey;
+    listItemDB->userInput = this->listItemDB->userInput;
+    listItemDB->endingDate = this->listItemDB->endingDate;
+    listItemDB->priorityLevel = this->listItemDB->priorityLevel;
+    listItemVectorDB.push_back(listItemDB);
 }
