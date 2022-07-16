@@ -35,7 +35,10 @@ TaskList::TaskList(QWidget *parent)
                             "QListView::item:hover { background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
                                 "stop: 0 #414fd1, stop: 1 #414fd1)}");
     FileController::fileRead(listItemVector);
-    itemVectorToList(listItemVector);
+    //itemVectorToList(listItemVector);
+    dbItem = new DatabaseHandler();
+    //dbItem->getData();
+    this->databaseToList(dbItem->networkReply());
 }
 
 TaskList::~TaskList() {
@@ -55,6 +58,13 @@ void TaskList::handleAddButton() {
                         dialogWindow->priorityLevel->currentText());
 
         FileController::fileWrite(listItemVector);
+
+        dbItem->listItemDB = new DatabaseItem();
+        dbItem->listItemDB->userInput = dialogWindow->inputText->text();
+        dbItem->listItemDB->endingDate = dialogWindow->endingTime->text();
+        dbItem->listItemDB->priorityLevel = dialogWindow->priorityLevel->currentText();
+
+        dbItem->postData();
     }
 }
 
@@ -67,6 +77,8 @@ void TaskList::handleDeleteButton() {
         this->takeItem(selectedIndex);
         this->clearSelection();
         FileController::fileWrite(listItemVector);
+
+        dbItem->deleteData(selectedIndex);
     }
 }
 
@@ -93,6 +105,12 @@ void TaskList::handleUpdateButton() {
             this->insertItem(selectedRowNo,addItemToList(dialogWindow));
             this->clearSelection();
             FileController::fileWrite(listItemVector);
+
+            dbItem->listItemDB = new DatabaseItem();
+            dbItem->listItemDB->userInput = dialogWindow->inputText->text();
+            dbItem->listItemDB->endingDate = dialogWindow->endingTime->text();
+            dbItem->listItemDB->priorityLevel = dialogWindow->priorityLevel->currentText();
+            dbItem->updateData(selectedRowNo);
         }
     }
 }
@@ -142,4 +160,20 @@ void TaskList::updateVectorItem(std::vector<ListItem*>& itemVector, int selected
     itemVector[selectedRow]->userInput = dialogWindow->inputText->text();
     itemVector[selectedRow]->endDate = dialogWindow->endingTime->text();
     itemVector[selectedRow]->importance = dialogWindow->priorityLevel->currentText();
+}
+
+
+void TaskList::databaseToList(std::vector<DatabaseItem *> dbItemList) {
+    QString userInputText;
+    QString userInputDate;
+    QString userInputPriority;
+    QString userInput;
+
+    for(DatabaseItem* itemInVector : dbItemList){
+        userInputText = itemInVector->userInput;
+        userInputDate = itemInVector->endingDate;
+        userInputPriority = itemInVector->priorityLevel;
+        userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
+        this->addItem(userInput);
+    }
 }

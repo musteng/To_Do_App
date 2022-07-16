@@ -29,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent)
     this->taskList = new TaskList(this);
     font.setPointSize(fontSize);
 
-
     addButton = new QPushButton("Add", this);
     addButton->setFont(font);
     addButton->setGeometry(QRect(QPoint(windowWidth - 475, 5), QSize(60, 40)));
@@ -47,12 +46,13 @@ MainWindow::MainWindow(QWidget *parent)
     updateButton->setGeometry(QRect(QPoint(windowWidth - 85, 5), QSize(60, 40)));
     updateButton->setStyleSheet("QPushButton:hover { color: white }");
     connect(updateButton, &QPushButton::released, taskList, &TaskList::handleUpdateButton);
-
 }
+
 
 MainWindow::~MainWindow() {
     delete ui;
 }
+
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
 

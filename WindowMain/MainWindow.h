@@ -12,12 +12,13 @@
 #include <QDialog>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QListWidgetItem>
+#include <QDebug>
 #include <iostream>
 #include "../WindowDialog/InputDialogWindow.h"
-#include <QDebug>
 #include "TaskList.h"
 #include "ListItem.h"
-#include <QListWidgetItem>
+
 
 
 QT_BEGIN_NAMESPACE
@@ -41,14 +42,14 @@ private:
     int minWindowHeight;
     int maxWindowWidth;
     int maxWindowHeight;
+    QFont font;
+    int fontSize;
 
 private:
     QPushButton* addButton;
     QPushButton* deleteButton;
     QPushButton* updateButton;
     TaskList* taskList;
-    QFont font;
-    int fontSize;
 };
 
 

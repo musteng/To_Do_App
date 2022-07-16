@@ -9,16 +9,20 @@
 #include <QPalette>
 #include <QColor>
 #include <QPushButton>
-#include "../WindowDialog/InputDialogWindow.h"
 #include <QSettings>
 #include <QDateTime>
-#include "ListItem.h"
-#include "../WindowDialog/DialogWindow.h"
-#include <vector>
 #include <QFile>
 #include <QTextFormat>
-#include "../FileControl/FileController.h"
+#include <vector>
 #include <utility>
+#include "../WindowDialog/InputDialogWindow.h"
+#include "ListItem.h"
+#include "../WindowDialog/DialogWindow.h"
+#include "../FileControl/FileController.h"
+#include "../DatabaseHandlerFiles/DatabaseItem.h"
+#include "../DatabaseHandlerFiles/DatabaseHandler.h"
+
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class TaskList; }
@@ -40,6 +44,7 @@ public:
     static QString addItemToList(DialogWindow* windowValues);
     void addItemToVector(ListItem* addedItem, unsigned int id, QString userInput, QString endingTime, QString priorityLevel);
     void updateVectorItem(std::vector<ListItem*>& itemVector, int selectedRow);
+    void databaseToList(std::vector<DatabaseItem*> dbItemList);
 
     std::vector<ListItem*> listItemVector;
 
@@ -56,6 +61,7 @@ private:
     QFont font;
     ListItem* item;
     DialogWindow* dialogWindow;
+    DatabaseHandler* dbItem;
 };
 
 
