@@ -12,7 +12,9 @@ find_package(Qt6 COMPONENTS
         Core
         Gui
         Widgets
-        REQUIRED)
+        REQUIRED
+        Network)
+
 
 set(PROJECT_SOURCES
         main.cpp
@@ -21,13 +23,15 @@ set(PROJECT_SOURCES
         WindowMain/TaskList.cpp WindowMain/TaskList.h WindowMain/TaskList.ui
         WindowMain/ListItem.cpp WindowMain/ListItem.h
         WindowDialog/DialogWindow.cpp WindowDialog/DialogWindow.h WindowDialog/DialogWindow.ui
-        FileControl/FileController.cpp FileControl/FileController.h)
+        FileControl/FileController.cpp FileControl/FileController.h
+        DatabaseHandlerFiles/DatabaseHandler.cpp DatabaseHandlerFiles/DatabaseHandler.h DatabaseHandlerFiles/DatabaseItem.cpp DatabaseHandlerFiles/DatabaseItem.h)
 
 add_executable(To_Do_App ${PROJECT_SOURCES})
 
 target_link_libraries(To_Do_App
         Qt::Core
         Qt::Gui
-        Qt::Widgets)
+        Qt::Widgets
+        Qt::Network)
 
 include_directories("${PROJECT_SOURCE_DIR}/inc/")
