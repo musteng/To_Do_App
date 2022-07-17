@@ -20,7 +20,6 @@ DialogWindow::~DialogWindow() {
 }
 
 DialogWindow::DialogWindow(QString title) {
-
     this->setWindowTitle(title);
     this->setModal(true);
 
@@ -28,42 +27,33 @@ DialogWindow::DialogWindow(QString title) {
     labelText = new QLabel(this);
     labelText->setFont(QFont("Geneva", 13, 1, false));
     labelText->setText("Task : ");
-
     inputText = new QLineEdit;
     inputText->setFont(QFont("Geneva", 13, 1, false));
-
     form->addRow(labelText, inputText);
-
-    endingTime = new QDateEdit(this);
-    endingTime->setDate(QDate::currentDate());
-    endingTime->setTime(QTime::currentTime());
-    endingTime->setCalendarPopup(true);
-    endingTime->setMinimumDate(QDate::currentDate());
-    endingTime->setFont(QFont("Geneva", 13, 1, false));
-    endingTime->setDisplayFormat("dd.MM.yyyy");
 
     labelDate = new QLabel(this);
     labelDate->setText("Ending Date : ");
     labelDate->setFont(QFont("Geneva", 13, 1, false));
-
+    endingTime = new QDateEdit(this);
+    endingTime->setDate(QDate::currentDate());
+    endingTime->setCalendarPopup(true);
+    endingTime->setMinimumDate(QDate::currentDate());
+    endingTime->setFont(QFont("Geneva", 13, 1, false));
+    endingTime->setDisplayFormat("dd.MM.yyyy");
     form->addRow(labelDate, endingTime);
-
-    priorityLevel = new QComboBox(this);
-    priorityLevel->addItem("Trivial");
-    priorityLevel->addItem("Low");
-    priorityLevel->addItem("Medium");
-    priorityLevel->addItem("High");
-    priorityLevel->setFont(QFont("Geneva", 13, 1, false));
 
     labelImportance = new QLabel(this);
     labelImportance->setText("Priority : ");
     labelImportance->setFont(QFont("Geneva", 13, 1, false));
-
+    priorityLevel = new QComboBox(this);
+    priorityLevel->addItem("None");
+    priorityLevel->addItem("Low");
+    priorityLevel->addItem("Medium");
+    priorityLevel->addItem("High");
+    priorityLevel->setFont(QFont("Geneva", 13, 1, false));
     form->addRow(labelImportance, priorityLevel);
 
-    QDialogButtonBox* buttonBox;
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Close);
-
     form->addRow(buttonBox);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);

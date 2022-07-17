@@ -26,16 +26,16 @@ TaskList::TaskList(QWidget *parent)
     font.setLetterSpacing(QFont::SpacingType::AbsoluteSpacing,static_cast<qreal>(1));
     this->setFont(font);
     this->setStyleSheet("QListWidget::item { height: 75px; }"
-                            "QListWidget::item:alternate { background-color: #bfffbf; }"
-                            "QListWidget::item { background-color: #deffde; }"
-                            "QListWidget {background-color : black};"
-                            "QListWidget::item { width: 100; }"
-                            "QListView::item { selection-color: white }"
-                            "QListView::item { selection-background-color: #3344de}"
-                            "QListView::item:hover { background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
-                                "stop: 0 #414fd1, stop: 1 #414fd1)}");
+                        "QListWidget::item { background-color: #00ffde; }"
+                        "QListWidget::item:alternate { background-color: #248a7c; }"
+                        "QListWidget {background-color : black};"
+                        "QListWidget::item { width: 100; }"
+                        "QListView::item { selection-color: white }"
+                        "QListView::item { selection-background-color: #3344de}"
+                        "QListView::item:hover { background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+                                "stop: 0 #00ffde, stop: 1 #414fd1)}");
     FileController::fileRead(listItemVector);
-    //itemVectorToList(listItemVector); // from file to app list
+    //itemVectorToList(listItemVector); // used to read from file to app list
     dbItem = new DatabaseHandler();
     dbData = dbItem->getData();
     this->databaseToList(dbData);
@@ -50,23 +50,23 @@ TaskList::~TaskList() {
 void TaskList::handleAddButton() {
     dialogWindow = new DialogWindow(QString("Add Task"));
     if( dialogWindow->exec() == QDialog::Accepted ) {
+        this->addItem(addItemToList(dialogWindow));
+
         item = new ListItem;
         unsigned int uniqueTime = QDateTime::currentSecsSinceEpoch();
-        this->addItem(addItemToList(dialogWindow));
         addItemToVector(item,
                         uniqueTime,
                         dialogWindow->inputText->text(),
                         dialogWindow->endingTime->text(),
                         dialogWindow->priorityLevel->currentText());
-
         FileController::fileWrite(listItemVector);
 
         dbItem->listItemDB = new DatabaseItem();
         dbItem->listItemDB->userInput = dialogWindow->inputText->text();
         dbItem->listItemDB->endingDate = dialogWindow->endingTime->text();
         dbItem->listItemDB->priorityLevel = dialogWindow->priorityLevel->currentText();
-
         dbItem->postData();
+        this->clearSelection();
     }
 }
 
@@ -78,8 +78,8 @@ void TaskList::handleDeleteButton() {
         listItemVector.erase(listItemVector.begin() + selectedIndex);
         this->takeItem(selectedIndex);
         this->clearSelection();
-        FileController::fileWrite(listItemVector);
 
+        FileController::fileWrite(listItemVector);
         dbItem->deleteData(selectedIndex);
     }
 }

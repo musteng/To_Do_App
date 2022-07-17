@@ -3,12 +3,13 @@
 //
 
 #include "FileController.h"
-
+#include <QDebug>
 
 void FileController::fileRead(std::vector<ListItem*>& itemVector) {
+    QString homeDir = std::getenv("HOME");
     ListItem* item1;
     QFile file;
-    file.setFileName("/Users/mustafacevik/Desktop/savedItemsTry.txt");
+    file.setFileName(homeDir + "/Desktop/savedItemsTry.txt");
     file.open(QIODeviceBase::ReadWrite);
     QString line;
     QStringList lineValues;
@@ -30,8 +31,9 @@ void FileController::fileRead(std::vector<ListItem*>& itemVector) {
 
 
 void FileController::fileWrite(std::vector<ListItem*>& itemVector) {
+    QString homeDir = std::getenv("HOME");
     QFile file;
-    file.setFileName("/Users/mustafacevik/Desktop/savedItemsTry.txt");
+    file.setFileName(homeDir + "/Desktop/savedItemsTry.txt");
     file.open(QIODeviceBase::ReadWrite);
     QTextStream out(&file);
     file.resize(0);

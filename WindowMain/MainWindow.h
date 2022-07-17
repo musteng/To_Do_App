@@ -8,17 +8,10 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QListWidget>
-#include <QTableWidget>
 #include <QDialog>
-#include <QMessageBox>
-#include <QInputDialog>
 #include <QListWidgetItem>
-#include <QDebug>
-#include <iostream>
-#include "../WindowDialog/InputDialogWindow.h"
 #include "TaskList.h"
 #include "ListItem.h"
-
 
 
 QT_BEGIN_NAMESPACE

@@ -6,14 +6,12 @@
 #define TO_DO_APP_LISTITEM_H
 
 #include <QString>
-#include <QListWidgetItem>
+
 
 struct ListItem {
-public:
     ListItem();
     ~ListItem();
 
-public:
     unsigned int itemId;
     QString userInput;
     QString endDate;

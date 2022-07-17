@@ -12,10 +12,9 @@
 #include <QEventLoop>
 #include <QVariantMap>
 #include <QJsonDocument>
-#include <QJsonArray>
 #include <QJsonObject>
 #include "DatabaseItem.h"
-#include "../WindowMain/ListItem.h"
+
 
 class DatabaseHandler : public QObject {
     Q_OBJECT
@@ -36,11 +35,11 @@ public:
 
 private:
     QNetworkAccessManager* m_networkAccessManager;
-    QNetworkRequest* newRequest;
+    QNetworkRequest* m_newRequest;
     QNetworkReply* m_networkReply;
-    QVariantMap newItem;
-    QJsonDocument jsonDoc;
-    QEventLoop loop;
+    QVariantMap m_newItem;
+    QJsonDocument m_jsonDoc;
+    QEventLoop m_loop;
 };
 
 

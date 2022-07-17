@@ -8,7 +8,6 @@
 #include <QDialog>
 #include <QFormLayout>
 #include <QLabel>
-#include <QSpinBox>
 #include <QDialogButtonBox>
 #include <QDateTimeEdit>
 #include <QLineEdit>
@@ -31,11 +30,14 @@ public:
 public:
     Ui::DialogWindow *ui;
     QFormLayout* form;
+
     QLineEdit* inputText;
     QDateEdit* endingTime;
+    QComboBox* priorityLevel;
+    QDialogButtonBox* buttonBox;
+
     QLabel* labelText;
     QLabel* labelDate;
-    QComboBox* priorityLevel;
     QLabel* labelImportance;
 };
 
