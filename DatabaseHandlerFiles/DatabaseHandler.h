@@ -40,6 +40,7 @@ private:
     QVariantMap m_newItem;
     QJsonDocument m_jsonDoc;
     QEventLoop m_loop;
+    QUrl dbUrl;
 };
 
 

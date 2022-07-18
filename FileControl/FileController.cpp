@@ -7,8 +7,10 @@
 
 void FileController::fileRead(std::vector<ListItem*>& itemVector) {
     QString homeDir = std::getenv("HOME");
+    QString fileName = homeDir + "/Desktop/savedItemsTry.txt";
+
     QFile file;
-    file.setFileName(homeDir + "/Desktop/savedItemsTry.txt");
+    file.setFileName(fileName);
     file.open(QIODeviceBase::ReadWrite);
     QString line;
     QStringList lineValues;
@@ -32,8 +34,10 @@ void FileController::fileRead(std::vector<ListItem*>& itemVector) {
 
 void FileController::fileWrite(const std::vector<ListItem*>& itemVector) {
     QString homeDir = std::getenv("HOME");
+    QString fileName = homeDir + "/Desktop/savedItemsTry.txt";
+
     QFile file;
-    file.setFileName(homeDir + "/Desktop/savedItemsTry.txt");
+    file.setFileName(fileName);
     file.open(QIODeviceBase::ReadWrite);
     QTextStream out(&file);
     file.resize(0);

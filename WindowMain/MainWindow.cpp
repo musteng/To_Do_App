@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     , addButton("Add", this)
     , deleteButton("Remove", this)
     , updateButton("Update", this)
+    , taskList(this)
 {
     ui->setupUi(this);
     this->setStyleSheet("MainWindow {background-color : #49494d};");
@@ -31,21 +32,20 @@ MainWindow::MainWindow(QWidget *parent)
     this->setMinimumSize(minWindowWidth, minWindowHeight);
     this->font.setPointSize(fontSize);
 
-    this->taskList = new TaskList(this);
     addButton.setFont(font);
     addButton.setGeometry(QRect(QPoint(windowWidth - 475, 5), QSize(60, 40)));
     addButton.setStyleSheet("QPushButton:hover { color: #49494d }");
-    connect(&addButton, &QPushButton::released, taskList, &TaskList::handleAddButton);
+    connect(&addButton, &QPushButton::released, &taskList, &TaskList::handleAddButton);
 
     deleteButton.setFont(font);
     deleteButton.setGeometry(QRect(QPoint(windowWidth - 220, 5), QSize(60, 40)));
     deleteButton.setStyleSheet("QPushButton:hover { color: #49494d }");
-    connect(&deleteButton, &QPushButton::released, taskList, &TaskList::handleDeleteButton);
+    connect(&deleteButton, &QPushButton::released, &taskList, &TaskList::handleDeleteButton);
 
     updateButton.setFont(font);
     updateButton.setGeometry(QRect(QPoint(windowWidth - 85, 5), QSize(60, 40)));
     updateButton.setStyleSheet("QPushButton:hover { color: #49494d }");
-    connect(&updateButton, &QPushButton::released, taskList, &TaskList::handleUpdateButton);
+    connect(&updateButton, &QPushButton::released, &taskList, &TaskList::handleUpdateButton);
 }
 
 
@@ -56,12 +56,12 @@ MainWindow::~MainWindow() {
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
 
-    this->deleteButton.setGeometry(QRect(QPoint((this->taskList->width() - 180)/2 + 85, 5),
+    this->deleteButton.setGeometry(QRect(QPoint((this->taskList.width() - 180)/2 + 85, 5),
                                     QSize(60, 40)));
 
     this->updateButton.setGeometry(QRect(QPoint(this->width() - 85, 5),
                                     QSize(60, 40)));
 
-    this->taskList->resize(this->width() - 50, this->height() - 75);
+    this->taskList.resize(this->width() - 50, this->height() - 75);
 
 }

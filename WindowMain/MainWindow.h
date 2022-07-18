@@ -42,7 +42,7 @@ private:
     QPushButton addButton;
     QPushButton deleteButton;
     QPushButton updateButton;
-    TaskList* taskList;
+    TaskList taskList;
 };
 
 

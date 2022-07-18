@@ -6,7 +6,6 @@
 #define TO_DO_APP_TASKLIST_H
 
 #include <QListWidget>
-#include <QColor>
 #include <QPushButton>
 #include <QDateTime>
 #include <QFile>
@@ -34,13 +33,14 @@ public:
 public:
     void handleAddButton();
     void handleDeleteButton();
+
     void handleUpdateButton();
-    void mouseDoubleClickEvent(QMouseEvent* event) override;
-    void itemVectorToList(const std::vector<ListItem*>& listItemVector); // Used to read from file and transfer items to list
-    static QString addItemToList(const DialogWindow* windowValues);
+    static QString addItemToList(const DialogWindow& windowValues);
     void addItemToVector(ListItem* addedItem, unsigned int id, QString userInput, QString endingTime, QString priorityLevel);
-    void updateVectorItem(const std::vector<ListItem*>& itemVector, int selectedRow);
+    static void updateVectorItem(const std::vector<ListItem*>& itemVector, int selectedRow, const DialogWindow& dialogWindow);
     void databaseToList(const std::vector<DatabaseItem*>& dbItemList);
+    void itemVectorToList(const std::vector<ListItem*>& listItemVector); // Used to read from file and transfer items to list
+    void mouseDoubleClickEvent(QMouseEvent* event) override;
 
     std::vector<ListItem*> listItemVector;
 
@@ -53,9 +53,7 @@ private:
     QFont font;
 
 private:
-    Ui::TaskList *ui;
     ListItem* item;
-    DialogWindow* dialogWindow;
     DatabaseHandler* dbItem;
     std::vector<DatabaseItem*> dbData;
 };
