@@ -28,17 +28,15 @@ public:
     ~DialogWindow() override;
 
 public:
-    Ui::DialogWindow *ui;
-    QFormLayout* form;
-
-    QLineEdit* inputText;
-    QDateEdit* endingTime;
-    QComboBox* priorityLevel;
+    QFormLayout form;
+    QLineEdit inputText;
+    QDateEdit endingTime;
+    QComboBox priorityLevel;
     QDialogButtonBox* buttonBox;
 
-    QLabel* labelText;
-    QLabel* labelDate;
-    QLabel* labelImportance;
+    QLabel labelText;
+    QLabel labelDate;
+    QLabel labelImportance;
 };
 
 

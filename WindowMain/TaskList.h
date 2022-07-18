@@ -36,11 +36,11 @@ public:
     void handleDeleteButton();
     void handleUpdateButton();
     void mouseDoubleClickEvent(QMouseEvent* event) override;
-    void itemVectorToList(std::vector<ListItem*>& listItemVector); // Used to read from file and transfer items to list
-    static QString addItemToList(DialogWindow* windowValues);
+    void itemVectorToList(const std::vector<ListItem*>& listItemVector); // Used to read from file and transfer items to list
+    static QString addItemToList(const DialogWindow* windowValues);
     void addItemToVector(ListItem* addedItem, unsigned int id, QString userInput, QString endingTime, QString priorityLevel);
-    void updateVectorItem(std::vector<ListItem*>& itemVector, int selectedRow);
-    void databaseToList(std::vector<DatabaseItem*>& dbItemList);
+    void updateVectorItem(const std::vector<ListItem*>& itemVector, int selectedRow);
+    void databaseToList(const std::vector<DatabaseItem*>& dbItemList);
 
     std::vector<ListItem*> listItemVector;
 

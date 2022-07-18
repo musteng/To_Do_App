@@ -10,53 +10,51 @@
 
 DialogWindow::DialogWindow(QWidget *parent)
     : QDialog(parent)
-    , ui(new Ui::DialogWindow)
+    , form(this)
+    , labelText(this)
+    , inputText(this)
+    , labelDate(this)
+    , endingTime(this)
+    , labelImportance(this)
+    , priorityLevel(this)
 {
-    ui->setupUi(this);
 }
 
 DialogWindow::~DialogWindow() {
-    delete ui;
+    delete buttonBox;
 }
 
 DialogWindow::DialogWindow(QString title) {
     this->setWindowTitle(title);
     this->setModal(true);
 
-    form = new QFormLayout;
-    labelText = new QLabel(this);
-    labelText->setFont(QFont("Geneva", 13, 1, false));
-    labelText->setText("Task : ");
-    inputText = new QLineEdit;
-    inputText->setFont(QFont("Geneva", 13, 1, false));
-    form->addRow(labelText, inputText);
+    labelText.setFont(QFont("Geneva", 13, 1, false));
+    labelText.setText("Task : ");
+    inputText.setFont(QFont("Geneva", 13, 1, false));
+    form.addRow(&labelText, &inputText);
 
-    labelDate = new QLabel(this);
-    labelDate->setText("Ending Date : ");
-    labelDate->setFont(QFont("Geneva", 13, 1, false));
-    endingTime = new QDateEdit(this);
-    endingTime->setDate(QDate::currentDate());
-    endingTime->setCalendarPopup(true);
-    endingTime->setMinimumDate(QDate::currentDate());
-    endingTime->setFont(QFont("Geneva", 13, 1, false));
-    endingTime->setDisplayFormat("dd.MM.yyyy");
-    form->addRow(labelDate, endingTime);
+    labelDate.setText("Ending Date : ");
+    labelDate.setFont(QFont("Geneva", 13, 1, false));
+    endingTime.setDate(QDate::currentDate());
+    endingTime.setCalendarPopup(true);
+    endingTime.setMinimumDate(QDate::currentDate());
+    endingTime.setFont(QFont("Geneva", 13, 1, false));
+    endingTime.setDisplayFormat("dd.MM.yyyy");
+    form.addRow(&labelDate, &endingTime);
 
-    labelImportance = new QLabel(this);
-    labelImportance->setText("Priority : ");
-    labelImportance->setFont(QFont("Geneva", 13, 1, false));
-    priorityLevel = new QComboBox(this);
-    priorityLevel->addItem("None");
-    priorityLevel->addItem("Low");
-    priorityLevel->addItem("Medium");
-    priorityLevel->addItem("High");
-    priorityLevel->setFont(QFont("Geneva", 13, 1, false));
-    form->addRow(labelImportance, priorityLevel);
+    labelImportance.setText("Priority : ");
+    labelImportance.setFont(QFont("Geneva", 13, 1, false));
+    priorityLevel.addItem("None");
+    priorityLevel.addItem("Low");
+    priorityLevel.addItem("Medium");
+    priorityLevel.addItem("High");
+    priorityLevel.setFont(QFont("Geneva", 13, 1, false));
+    form.addRow(&labelImportance, &priorityLevel);
 
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Close);
-    form->addRow(buttonBox);
+    form.addRow(buttonBox);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
-    this->setLayout(form);
+    this->setLayout(&form);
 }

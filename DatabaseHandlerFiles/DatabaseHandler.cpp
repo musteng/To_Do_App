@@ -60,6 +60,8 @@ void DatabaseHandler::deleteData(int selectedRowNumber) {
     QString dbKey = listItemVectorDB[selectedRowNumber]->dbID;
     m_newRequest = new QNetworkRequest( QUrl("https://todoapp-c3d85-default-rtdb.europe-west1.firebasedatabase.app/ItemList/" + dbKey + ".json"));
     m_networkAccessManager->deleteResource(*m_newRequest);
+    delete listItemVectorDB[selectedRowNumber];
+    listItemVectorDB[selectedRowNumber] = nullptr;
     listItemVectorDB.erase(listItemVectorDB.begin() + selectedRowNumber);
 }
 

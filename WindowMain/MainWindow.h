@@ -39,9 +39,9 @@ private:
     int fontSize;
 
 private:
-    QPushButton* addButton;
-    QPushButton* deleteButton;
-    QPushButton* updateButton;
+    QPushButton addButton;
+    QPushButton deleteButton;
+    QPushButton updateButton;
     TaskList* taskList;
 };
 

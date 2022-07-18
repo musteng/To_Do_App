@@ -19,6 +19,9 @@ MainWindow::MainWindow(QWidget *parent)
     , maxWindowHeight(700)
     , font("Geneva")
     , fontSize(12)
+    , addButton("Add", this)
+    , deleteButton("Remove", this)
+    , updateButton("Update", this)
 {
     ui->setupUi(this);
     this->setStyleSheet("MainWindow {background-color : #49494d};");
@@ -29,23 +32,20 @@ MainWindow::MainWindow(QWidget *parent)
     this->font.setPointSize(fontSize);
 
     this->taskList = new TaskList(this);
-    addButton = new QPushButton("Add", this);
-    addButton->setFont(font);
-    addButton->setGeometry(QRect(QPoint(windowWidth - 475, 5), QSize(60, 40)));
-    addButton->setStyleSheet("QPushButton:hover { color: #49494d }");
-    connect(addButton, &QPushButton::released, taskList, &TaskList::handleAddButton);
+    addButton.setFont(font);
+    addButton.setGeometry(QRect(QPoint(windowWidth - 475, 5), QSize(60, 40)));
+    addButton.setStyleSheet("QPushButton:hover { color: #49494d }");
+    connect(&addButton, &QPushButton::released, taskList, &TaskList::handleAddButton);
 
-    deleteButton = new QPushButton("Remove", this);
-    deleteButton->setFont(font);
-    deleteButton->setGeometry(QRect(QPoint(windowWidth - 220, 5), QSize(60, 40)));
-    deleteButton->setStyleSheet("QPushButton:hover { color: #49494d }");
-    connect(deleteButton, &QPushButton::released, taskList, &TaskList::handleDeleteButton);
+    deleteButton.setFont(font);
+    deleteButton.setGeometry(QRect(QPoint(windowWidth - 220, 5), QSize(60, 40)));
+    deleteButton.setStyleSheet("QPushButton:hover { color: #49494d }");
+    connect(&deleteButton, &QPushButton::released, taskList, &TaskList::handleDeleteButton);
 
-    updateButton = new QPushButton("Update", this);
-    updateButton->setFont(font);
-    updateButton->setGeometry(QRect(QPoint(windowWidth - 85, 5), QSize(60, 40)));
-    updateButton->setStyleSheet("QPushButton:hover { color: #49494d }");
-    connect(updateButton, &QPushButton::released, taskList, &TaskList::handleUpdateButton);
+    updateButton.setFont(font);
+    updateButton.setGeometry(QRect(QPoint(windowWidth - 85, 5), QSize(60, 40)));
+    updateButton.setStyleSheet("QPushButton:hover { color: #49494d }");
+    connect(&updateButton, &QPushButton::released, taskList, &TaskList::handleUpdateButton);
 }
 
 
@@ -56,10 +56,10 @@ MainWindow::~MainWindow() {
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
 
-    this->deleteButton->setGeometry(QRect(QPoint((this->taskList->width() - 180)/2 + 85, 5),
+    this->deleteButton.setGeometry(QRect(QPoint((this->taskList->width() - 180)/2 + 85, 5),
                                     QSize(60, 40)));
 
-    this->updateButton->setGeometry(QRect(QPoint(this->width() - 85, 5),
+    this->updateButton.setGeometry(QRect(QPoint(this->width() - 85, 5),
                                     QSize(60, 40)));
 
     this->taskList->resize(this->width() - 50, this->height() - 75);

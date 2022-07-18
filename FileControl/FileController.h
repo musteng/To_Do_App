@@ -14,7 +14,7 @@
 class FileController {
 public:
     static void fileRead(std::vector<ListItem*>& itemVector);
-    static void fileWrite(std::vector<ListItem*>& itemVector);
+    static void fileWrite(const std::vector<ListItem*>& itemVector);
 };
 
 
