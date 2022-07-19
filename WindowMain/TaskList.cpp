@@ -35,7 +35,6 @@ TaskList::TaskList(QWidget *parent)
 
     FileController::fileRead(listItemVector);
     //itemVectorToList(listItemVector); // used to read from file to app list
-    //databaseHandler = new DatabaseHandler();
     dbData = databaseHandler.getData();
     this->databaseToList(dbData);
 }
