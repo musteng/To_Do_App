@@ -54,7 +54,7 @@ private:
 
 private:
     ListItem* item;
-    DatabaseHandler* dbItem;
+    DatabaseHandler databaseHandler;
     std::vector<DatabaseItem*> dbData;
 };
 

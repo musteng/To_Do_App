@@ -6,9 +6,9 @@
 #define TO_DO_APP_DATABASEHANDLER_H
 
 #include <QObject>
-#include <QtNetwork/QNetworkAccessManager> // Allows the application to send network requests and receive replies
-#include <QtNetwork/QNetworkReply>  // The QNetworkReply class contains the data and headers for a request sent with QNetworkAccessManager
-#include <QtNetwork/QNetworkRequest> // The QNetworkRequest class holds a request to be sent with QNetworkAccessManager.
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkRequest>
 #include <QEventLoop>
 #include <QVariantMap>
 #include <QJsonDocument>
@@ -27,19 +27,17 @@ public:
     void postData();
     void updateData(int selectedRowNumber);
     void deleteData(int selectedRowNumber);
-    void itemToVector();
 
 public:
     DatabaseItem* listItemDB;
     std::vector<DatabaseItem*> listItemVectorDB;
 
 private:
-    QNetworkAccessManager* m_networkAccessManager;
-    QNetworkRequest* m_newRequest;
-    QNetworkReply* m_networkReply;
-    QVariantMap m_newItem;
-    QJsonDocument m_jsonDoc;
-    QEventLoop m_loop;
+    QNetworkAccessManager networkAccessManager;
+    QNetworkReply* networkReply;
+    QVariantMap newDatabaseElement;
+    QJsonDocument jsonData;
+    QEventLoop eventLoop;
     QUrl dbUrl;
 };
 

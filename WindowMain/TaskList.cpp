@@ -35,8 +35,8 @@ TaskList::TaskList(QWidget *parent)
 
     FileController::fileRead(listItemVector);
     //itemVectorToList(listItemVector); // used to read from file to app list
-    dbItem = new DatabaseHandler();
-    dbData = dbItem->getData();
+    //databaseHandler = new DatabaseHandler();
+    dbData = databaseHandler.getData();
     this->databaseToList(dbData);
 }
 
@@ -50,11 +50,11 @@ void TaskList::handleAddButton() {
     if( dialogWindow.exec() == QDialog::Accepted ) {
         this->addItem(addItemToList(dialogWindow));
 
-        dbItem->listItemDB = new DatabaseItem();
-        dbItem->listItemDB->userInput = dialogWindow.inputText.text();
-        dbItem->listItemDB->endingDate = dialogWindow.endingTime.text();
-        dbItem->listItemDB->priorityLevel = dialogWindow.priorityLevel.currentText();
-        dbItem->postData();
+        databaseHandler.listItemDB = new DatabaseItem();
+        databaseHandler.listItemDB->userInput = dialogWindow.inputText.text();
+        databaseHandler.listItemDB->endingDate = dialogWindow.endingTime.text();
+        databaseHandler.listItemDB->priorityLevel = dialogWindow.priorityLevel.currentText();
+        databaseHandler.postData();
 
         item = new ListItem;
         unsigned int uniqueTime = QDateTime::currentSecsSinceEpoch();
@@ -81,7 +81,7 @@ void TaskList::handleDeleteButton() {
         this->takeItem(selectedIndex);
         this->clearSelection();
 
-        dbItem->deleteData(selectedIndex);
+        databaseHandler.deleteData(selectedIndex);
         FileController::fileWrite(listItemVector);
     }
 }
@@ -96,7 +96,7 @@ void TaskList::handleUpdateButton() {
 
     if( selectedRowNo != -1) {
         selectedItem = listItemVector[selectedRowNo];
-        selectedItemDBVector = dbItem->listItemVectorDB[selectedRowNo];
+        selectedItemDBVector = databaseHandler.listItemVectorDB[selectedRowNo];
 
         dialogWindow.inputText.setText(selectedItemDBVector->userInput);
         QStringList dateValues = selectedItemDBVector->endingDate.split('.');
@@ -112,11 +112,11 @@ void TaskList::handleUpdateButton() {
             this->clearSelection();
             FileController::fileWrite(listItemVector);
 
-            dbItem->listItemDB = new DatabaseItem();
-            dbItem->listItemDB->userInput = dialogWindow.inputText.text();
-            dbItem->listItemDB->endingDate = dialogWindow.endingTime.text();
-            dbItem->listItemDB->priorityLevel = dialogWindow.priorityLevel.currentText();
-            dbItem->updateData(selectedRowNo);
+            databaseHandler.listItemDB = new DatabaseItem();
+            databaseHandler.listItemDB->userInput = dialogWindow.inputText.text();
+            databaseHandler.listItemDB->endingDate = dialogWindow.endingTime.text();
+            databaseHandler.listItemDB->priorityLevel = dialogWindow.priorityLevel.currentText();
+            databaseHandler.updateData(selectedRowNo);
         }
     }
 }
