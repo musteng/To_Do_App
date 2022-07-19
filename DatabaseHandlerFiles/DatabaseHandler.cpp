@@ -61,12 +61,13 @@ void DatabaseHandler::postData() {
     eventLoop.exec();
 
     if (!networkReply->error()){
-        QByteArray itemKey = networkReply->readAll().split(':')[1];
-        itemKey.chop(2);
-        itemKey.remove(0, 1);
-        qInfo() << itemKey;
+        QByteArray itemKey = networkReply->readAll();
+        QJsonDocument jsonKeyDocument = QJsonDocument::fromJson(itemKey);
+        QJsonObject jsonKeyObject = jsonKeyDocument.object();
+        QString databaseItemKey = jsonKeyObject["name"].toString();
+        qInfo() << databaseItemKey;
 
-        listItemDB->dbID = itemKey;
+        listItemDB->dbID = databaseItemKey;
         listItemVectorDB.push_back(listItemDB);
     }
     delete networkReply;
@@ -101,6 +102,8 @@ void DatabaseHandler::updateData(int selectedRowNumber) {
     QNetworkRequest updateRequest = QNetworkRequest(updateRequestUrl);
     updateRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     networkReply = networkAccessManager.put(updateRequest, jsonData.toJson()); // TODO PATCH
+    connect(networkReply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+    eventLoop.exec();
 
     if (!networkReply->error()) {
         listItemVectorDB[selectedRowNumber]->userInput = this->listItemDB->userInput;
