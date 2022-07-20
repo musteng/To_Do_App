@@ -5,7 +5,6 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_TaskList.h" resolved
 
 #include "TaskList.h"
-#include "ui_TaskList.h"
 
 
 TaskList::TaskList(QWidget *parent)
@@ -47,13 +46,12 @@ void TaskList::handleAddButton() {
     DialogWindow dialogWindow("Add Task");
 
     if( dialogWindow.exec() == QDialog::Accepted ) {
-        this->addItem(addItemToList(dialogWindow));
-
         databaseHandler.listItemDB = new DatabaseItem();
         databaseHandler.listItemDB->userInput = dialogWindow.inputText.text();
         databaseHandler.listItemDB->endingDate = dialogWindow.endingTime.text();
         databaseHandler.listItemDB->priorityLevel = dialogWindow.priorityLevel.currentText();
         databaseHandler.postData();
+        this->addItem(databaseHandler.getSingleData(databaseHandler.listItemDB->dbID));
 
         item = new ListItem;
         unsigned int uniqueTime = QDateTime::currentSecsSinceEpoch();
@@ -63,7 +61,6 @@ void TaskList::handleAddButton() {
                         dialogWindow.endingTime.text(),
                         dialogWindow.priorityLevel.currentText());
         FileController::fileWrite(listItemVector);
-
         this->clearSelection();
     }
 }
@@ -105,17 +102,17 @@ void TaskList::handleUpdateButton() {
         dialogWindow.priorityLevel.setCurrentText(selectedItemDBVector->priorityLevel);
 
         if (dialogWindow.exec() == QDialog::Accepted){
-            TaskList::updateVectorItem(listItemVector, selectedRowNo, dialogWindow);
-            this->takeItem(selectedRowNo);
-            this->insertItem(selectedRowNo,addItemToList(dialogWindow));
-            this->clearSelection();
-            FileController::fileWrite(listItemVector);
-
             databaseHandler.listItemDB = new DatabaseItem();
             databaseHandler.listItemDB->userInput = dialogWindow.inputText.text();
             databaseHandler.listItemDB->endingDate = dialogWindow.endingTime.text();
             databaseHandler.listItemDB->priorityLevel = dialogWindow.priorityLevel.currentText();
             databaseHandler.updateData(selectedRowNo);
+
+            TaskList::updateVectorItem(listItemVector, selectedRowNo, dialogWindow);
+            this->takeItem(selectedRowNo);
+            this->insertItem(selectedRowNo, this->databaseHandler.getSingleData(selectedItemDBVector->dbID));
+            this->clearSelection();
+            FileController::fileWrite(listItemVector);
         }
     }
 }
@@ -149,15 +146,6 @@ void TaskList::addItemToVector(ListItem* addedItem, unsigned int id, QString use
     addedItem->endDate = std::move(endingTime);
     addedItem->importance = std::move(priorityLevel);
     listItemVector.push_back(addedItem);
-}
-
-
-QString TaskList::addItemToList(const DialogWindow& windowValues) {
-    QString userInputText = windowValues.inputText.text();
-    QString userInputDate = windowValues.endingTime.text();
-    QString userInputPriority = windowValues.priorityLevel.currentText();
-    QString addedTask = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
-    return addedTask;
 }
 
 

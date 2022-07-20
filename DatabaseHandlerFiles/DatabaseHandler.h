@@ -27,6 +27,7 @@ public:
     void postData();
     void updateData(int selectedRowNumber);
     void deleteData(int selectedRowNumber);
+    QString getSingleData(const QString& databaseID);
 
 public:
     DatabaseItem* listItemDB;

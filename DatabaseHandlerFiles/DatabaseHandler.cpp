@@ -113,3 +113,27 @@ void DatabaseHandler::updateData(int selectedRowNumber) {
     delete networkReply;
     networkReply = nullptr;
 }
+
+
+QString DatabaseHandler::getSingleData(const QString& databaseID){
+    QUrl itemUrl = "https://todoapp-c3d85-default-rtdb.europe-west1.firebasedatabase.app/ItemList/" + databaseID + ".json";
+    QNetworkRequest getSingleElementRequest = QNetworkRequest(itemUrl);
+    networkReply = this->networkAccessManager.get(getSingleElementRequest);
+    connect(networkReply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+    eventLoop.exec();
+
+    QString addedTask;
+    if (!networkReply->error()){
+        QByteArray itemData = networkReply->readAll();
+        QJsonDocument itemDataJsonDocument = QJsonDocument::fromJson(itemData);
+        QJsonObject itemDataJson = itemDataJsonDocument.object();
+
+        QString userInputText = itemDataJson["userInput"].toString();
+        QString userInputDate = itemDataJson["endDate"].toString();
+        QString userInputPriority = itemDataJson["importance"].toString();
+        addedTask = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
+    }
+    delete networkReply;
+    networkReply = nullptr;
+    return addedTask;
+}

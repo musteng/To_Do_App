@@ -9,7 +9,6 @@
 #include <QPushButton>
 #include <QListWidget>
 #include <QDialog>
-#include <QListWidgetItem>
 #include "TaskList.h"
 #include "ListItem.h"
 

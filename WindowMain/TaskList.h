@@ -33,9 +33,7 @@ public:
 public:
     void handleAddButton();
     void handleDeleteButton();
-
     void handleUpdateButton();
-    static QString addItemToList(const DialogWindow& windowValues);
     void addItemToVector(ListItem* addedItem, unsigned int id, QString userInput, QString endingTime, QString priorityLevel);
     static void updateVectorItem(const std::vector<ListItem*>& itemVector, int selectedRow, const DialogWindow& dialogWindow);
     void databaseToList(const std::vector<DatabaseItem*>& dbItemList);

@@ -29,7 +29,6 @@ set(PROJECT_SOURCES
 add_executable(To_Do_App ${PROJECT_SOURCES})
 
 target_link_libraries(To_Do_App
-        Qt::Core
         Qt::Gui
         Qt::Widgets
         Qt::Network)
