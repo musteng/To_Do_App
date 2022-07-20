@@ -109,8 +109,8 @@ void TaskList::handleUpdateButton() {
             databaseHandler.updateData(selectedRowNo);
 
             TaskList::updateVectorItem(listItemVector, selectedRowNo, dialogWindow);
-            this->takeItem(selectedRowNo);
             this->insertItem(selectedRowNo, this->databaseHandler.getSingleData(selectedItemDBVector->dbID));
+            this->takeItem(selectedRowNo + 1);
             this->clearSelection();
             FileController::fileWrite(listItemVector);
         }

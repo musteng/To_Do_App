@@ -19,10 +19,6 @@
 #include "../DatabaseHandlerFiles/DatabaseHandler.h"
 
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class TaskList; }
-QT_END_NAMESPACE
-
 class TaskList : public QListWidget {
 Q_OBJECT
 

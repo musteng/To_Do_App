@@ -5,11 +5,10 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_MainWindow.h" resolved
 
 #include "MainWindow.h"
-#include "ui_MainWindow.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::MainWindow)
     , windowTitle("To Do List")
     , windowWidth(500)
     , windowHeight(600)
@@ -24,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
     , updateButton("Update", this)
     , taskList(this)
 {
-    ui->setupUi(this);
     this->setStyleSheet("MainWindow {background-color : #49494d};");
     this->setWindowTitle(windowTitle);
     this->resize(windowWidth, windowHeight);
@@ -50,7 +48,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 MainWindow::~MainWindow() {
-    delete ui;
 }
 
 

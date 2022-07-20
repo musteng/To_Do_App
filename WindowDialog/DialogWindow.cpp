@@ -5,7 +5,6 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_DialogWindow.h" resolved
 
 #include "DialogWindow.h"
-#include "ui_DialogWindow.h"
 
 
 DialogWindow::DialogWindow(QWidget *parent)

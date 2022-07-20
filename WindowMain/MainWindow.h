@@ -13,10 +13,6 @@
 #include "ListItem.h"
 
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
-
 class MainWindow : public QWidget {
 Q_OBJECT
 
@@ -26,7 +22,6 @@ public:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
-    Ui::MainWindow *ui;
     QString windowTitle;
     int windowWidth;
     int windowHeight;

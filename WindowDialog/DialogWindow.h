@@ -15,10 +15,6 @@
 #include "../WindowMain/ListItem.h"
 
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class DialogWindow; }
-QT_END_NAMESPACE
-
 class DialogWindow : public QDialog {
 Q_OBJECT
 
