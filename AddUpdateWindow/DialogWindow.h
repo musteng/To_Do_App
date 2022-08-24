@@ -12,7 +12,7 @@
 #include <QDateTimeEdit>
 #include <QLineEdit>
 #include <QComboBox>
-#include "../WindowMain/ListItem.h"
+#include "../ApplicationWindow/ListItem.h"
 
 
 class DialogWindow : public QDialog {

@@ -34,8 +34,9 @@ TaskList::TaskList(QWidget *parent)
 
     FileController::fileRead(listItemVector);
     //itemVectorToList(listItemVector); // used to read from file to app list
-    dbData = databaseHandler.getData();
-    this->databaseToList(dbData);
+    //dbData = databaseHandler.getData();
+    //this->databaseToList(dbData);
+    this->dBtoList(databaseHandler.getDBKeys());
 }
 
 
@@ -92,15 +93,42 @@ void TaskList::handleUpdateButton() {
 
     if( selectedRowNo != -1) {
         selectedItem = listItemVector[selectedRowNo];
-        selectedItemDBVector = databaseHandler.listItemVectorDB[selectedRowNo];
+        //selectedItemDBVector = databaseHandler.listItemVectorDB[selectedRowNo];
+        QString key = databaseHandler.dbKeys[selectedRowNo];
+        QUrl itemUrl = "https://todoapp2-f922b-default-rtdb.europe-west1.firebasedatabase.app/ItemList/" + key + ".json";
+        QNetworkAccessManager networkAccessManager;
+        QNetworkRequest getElementRequest = QNetworkRequest(itemUrl);
+        QNetworkReply* networkReply = networkAccessManager.get(getElementRequest);
+        QEventLoop eventLoop;
+        connect(networkReply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+        eventLoop.exec();
 
+        QString userInputText;
+        QString userInputDate;
+        QString userInputPriority;
+        if (!networkReply->error()){
+            QByteArray itemData = networkReply->readAll();
+            QJsonDocument itemDataJsonDocument = QJsonDocument::fromJson(itemData);
+            QJsonObject itemDataJson = itemDataJsonDocument.object();
+
+            userInputText = itemDataJson["userInput"].toString();
+            userInputDate = itemDataJson["endDate"].toString();
+            userInputPriority = itemDataJson["importance"].toString();
+        }
+        dialogWindow.inputText.setText(userInputText);
+        QStringList dateValues = userInputDate.split('.');
+        dialogWindow.endingTime.setDate( QDate(dateValues[2].toInt(&ok, 10),
+                                               dateValues[1].toInt(&ok, 10),
+                                               dateValues[0].toInt(&ok, 10)));
+        dialogWindow.priorityLevel.setCurrentText(userInputPriority);
+        /*
         dialogWindow.inputText.setText(selectedItemDBVector->userInput);
         QStringList dateValues = selectedItemDBVector->endingDate.split('.');
         dialogWindow.endingTime.setDate( QDate(dateValues[2].toInt(&ok, 10),
                                                     dateValues[1].toInt(&ok, 10),
                                                     dateValues[0].toInt(&ok, 10)));
         dialogWindow.priorityLevel.setCurrentText(selectedItemDBVector->priorityLevel);
-
+*/
         if (dialogWindow.exec() == QDialog::Accepted){
             databaseHandler.listItemDB = new DatabaseItem();
             databaseHandler.listItemDB->userInput = dialogWindow.inputText.text();
@@ -109,7 +137,7 @@ void TaskList::handleUpdateButton() {
             databaseHandler.updateData(selectedRowNo);
 
             TaskList::updateVectorItem(listItemVector, selectedRowNo, dialogWindow);
-            this->insertItem(selectedRowNo, this->databaseHandler.getSingleData(selectedItemDBVector->dbID));
+            this->insertItem(selectedRowNo, this->databaseHandler.getSingleData(key));
             this->takeItem(selectedRowNo + 1);
             this->clearSelection();
             FileController::fileWrite(listItemVector);
@@ -168,5 +196,35 @@ void TaskList::databaseToList(const std::vector<DatabaseItem*>& dbItemList) {
         userInputPriority = itemInVector->priorityLevel;
         userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
         this->addItem(userInput);
+    }
+}
+
+void TaskList::dBtoList(const std::vector<QString>& dbKeys) {
+    QString userInputText;
+    QString userInputDate;
+    QString userInputPriority;
+    QString userInput;
+
+    for(const QString& key : dbKeys){
+        QUrl itemUrl = "https://todoapp2-f922b-default-rtdb.europe-west1.firebasedatabase.app/ItemList/" + key + ".json";
+        QNetworkAccessManager networkAccessManager;
+        QNetworkRequest getElementRequest = QNetworkRequest(itemUrl);
+        QNetworkReply* networkReply = networkAccessManager.get(getElementRequest);
+        QEventLoop eventLoop;
+        connect(networkReply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+        eventLoop.exec();
+
+        if (!networkReply->error()){
+            QByteArray itemData = networkReply->readAll();
+            QJsonDocument itemDataJsonDocument = QJsonDocument::fromJson(itemData);
+            QJsonObject itemDataJson = itemDataJsonDocument.object();
+
+            userInputText = itemDataJson["userInput"].toString();
+            userInputDate = itemDataJson["endDate"].toString();
+            userInputPriority = itemDataJson["importance"].toString();
+            userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
+        }
+        this->addItem(userInput);
+        delete networkReply;
     }
 }

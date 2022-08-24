@@ -8,7 +8,7 @@
 DatabaseHandler::DatabaseHandler(QObject *parent)
     : QObject(parent)
     , networkAccessManager(this)
-    , dbUrl("https://todoapp-c3d85-default-rtdb.europe-west1.firebasedatabase.app/ItemList.json")
+    , dbUrl("https://todoapp2-f922b-default-rtdb.europe-west1.firebasedatabase.app/ItemList.json")
 {
 }
 
@@ -68,7 +68,8 @@ void DatabaseHandler::postData() {
         qInfo() << databaseItemKey;
 
         listItemDB->dbID = databaseItemKey;
-        listItemVectorDB.push_back(listItemDB);
+        //listItemVectorDB.push_back(listItemDB);
+        dbKeys.push_back(databaseItemKey);
     }
     delete networkReply;
     networkReply = nullptr;
@@ -76,19 +77,22 @@ void DatabaseHandler::postData() {
 
 
 void DatabaseHandler::deleteData(int selectedRowNumber) {
-    QString dbKey = listItemVectorDB[selectedRowNumber]->dbID;
-    QUrl deleteRequestUrl = "https://todoapp-c3d85-default-rtdb.europe-west1.firebasedatabase.app/ItemList/" + dbKey + ".json";
+    //QString dbKey = listItemVectorDB[selectedRowNumber]->dbID;
+    QString dbKey = dbKeys[selectedRowNumber];
+    QUrl deleteRequestUrl = "https://todoapp2-f922b-default-rtdb.europe-west1.firebasedatabase.app/ItemList/" + dbKey + ".json";
     QNetworkRequest deleteRequest = QNetworkRequest(deleteRequestUrl);
     networkAccessManager.deleteResource(deleteRequest);
 
-    delete listItemVectorDB[selectedRowNumber];
-    listItemVectorDB[selectedRowNumber] = nullptr;
-    listItemVectorDB.erase(listItemVectorDB.begin() + selectedRowNumber);
+    //delete listItemVectorDB[selectedRowNumber];
+    //listItemVectorDB[selectedRowNumber] = nullptr;
+    //listItemVectorDB.erase(listItemVectorDB.begin() + selectedRowNumber);
+    dbKeys.erase(dbKeys.begin() + selectedRowNumber);
 }
 
 
 void DatabaseHandler::updateData(int selectedRowNumber) {
-    QString dbKey = listItemVectorDB[selectedRowNumber]->dbID;
+    //QString dbKey = listItemVectorDB[selectedRowNumber]->dbID;
+    QString dbKey = dbKeys[selectedRowNumber];
     QString userInputDbKey = "userInput";
     QString endDateDbKey = "endDate";
     QString priorityDbKey = "importance";
@@ -98,7 +102,7 @@ void DatabaseHandler::updateData(int selectedRowNumber) {
     newDatabaseElement[priorityDbKey] = this->listItemDB->priorityLevel;
     jsonData = QJsonDocument::fromVariant(newDatabaseElement);
 
-    QUrl updateRequestUrl = "https://todoapp-c3d85-default-rtdb.europe-west1.firebasedatabase.app/ItemList/" + dbKey + ".json";
+    QUrl updateRequestUrl = "https://todoapp2-f922b-default-rtdb.europe-west1.firebasedatabase.app/ItemList/" + dbKey + ".json";
     QNetworkRequest updateRequest = QNetworkRequest(updateRequestUrl);
     updateRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     networkReply = networkAccessManager.put(updateRequest, jsonData.toJson()); // TODO PATCH
@@ -106,9 +110,9 @@ void DatabaseHandler::updateData(int selectedRowNumber) {
     eventLoop.exec();
 
     if (!networkReply->error()) {
-        listItemVectorDB[selectedRowNumber]->userInput = this->listItemDB->userInput;
-        listItemVectorDB[selectedRowNumber]->priorityLevel = this->listItemDB->priorityLevel;
-        listItemVectorDB[selectedRowNumber]->endingDate = this->listItemDB->endingDate;
+        //listItemVectorDB[selectedRowNumber]->userInput = this->listItemDB->userInput;
+        //listItemVectorDB[selectedRowNumber]->priorityLevel = this->listItemDB->priorityLevel;
+        //listItemVectorDB[selectedRowNumber]->endingDate = this->listItemDB->endingDate;
     }
     delete networkReply;
     networkReply = nullptr;
@@ -116,7 +120,7 @@ void DatabaseHandler::updateData(int selectedRowNumber) {
 
 
 QString DatabaseHandler::getSingleData(const QString& databaseID){
-    QUrl itemUrl = "https://todoapp-c3d85-default-rtdb.europe-west1.firebasedatabase.app/ItemList/" + databaseID + ".json";
+    QUrl itemUrl = "https://todoapp2-f922b-default-rtdb.europe-west1.firebasedatabase.app/ItemList/" + databaseID + ".json";
     QNetworkRequest getSingleElementRequest = QNetworkRequest(itemUrl);
     networkReply = this->networkAccessManager.get(getSingleElementRequest);
     connect(networkReply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
@@ -136,4 +140,24 @@ QString DatabaseHandler::getSingleData(const QString& databaseID){
     delete networkReply;
     networkReply = nullptr;
     return addedTask;
+}
+
+std::vector<QString> DatabaseHandler::getDBKeys() {
+    QNetworkRequest getRequest = QNetworkRequest(dbUrl);
+    networkReply = this->networkAccessManager.get(getRequest);
+    connect(networkReply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+    eventLoop.exec();
+
+    if (!networkReply->error()) {
+        QByteArray responseData = networkReply->readAll();
+        QJsonDocument jsonResponseFromByteArray = QJsonDocument::fromJson(responseData);
+        QJsonObject jsonResponse = jsonResponseFromByteArray.object();
+        for (QString &key: jsonResponse.keys()) {
+            dbKeys.push_back(key);
+        }
+    }
+    delete networkReply;
+    networkReply = nullptr;
+
+    return dbKeys;
 }

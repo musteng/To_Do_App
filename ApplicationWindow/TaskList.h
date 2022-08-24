@@ -13,7 +13,7 @@
 #include <vector>
 #include <utility>
 #include "ListItem.h"
-#include "../WindowDialog/DialogWindow.h"
+#include "../AddUpdateWindow/DialogWindow.h"
 #include "../FileControl/FileController.h"
 #include "../DatabaseHandlerFiles/DatabaseItem.h"
 #include "../DatabaseHandlerFiles/DatabaseHandler.h"
@@ -35,6 +35,7 @@ public:
     void databaseToList(const std::vector<DatabaseItem*>& dbItemList);
     void itemVectorToList(const std::vector<ListItem*>& listItemVector); // Used to read from file and transfer items to list
     void mouseDoubleClickEvent(QMouseEvent* event) override;
+    void dBtoList(const std::vector<QString>& dbKeys);
 
     std::vector<ListItem*> listItemVector;
 

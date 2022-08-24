@@ -28,10 +28,12 @@ public:
     void updateData(int selectedRowNumber);
     void deleteData(int selectedRowNumber);
     QString getSingleData(const QString& databaseID);
+    std::vector<QString> getDBKeys();
 
 public:
     DatabaseItem* listItemDB;
     std::vector<DatabaseItem*> listItemVectorDB;
+    std::vector<QString> dbKeys;
 
 private:
     QNetworkAccessManager networkAccessManager;

@@ -18,10 +18,10 @@ find_package(Qt6 COMPONENTS
 
 set(PROJECT_SOURCES
         main.cpp
-        WindowMain/MainWindow.cpp WindowMain/MainWindow.h WindowMain/MainWindow.ui
-        WindowMain/TaskList.cpp WindowMain/TaskList.h WindowMain/TaskList.ui
-        WindowMain/ListItem.cpp WindowMain/ListItem.h
-        WindowDialog/DialogWindow.cpp WindowDialog/DialogWindow.h WindowDialog/DialogWindow.ui
+        ApplicationWindow/MainWindow.cpp ApplicationWindow/MainWindow.h ApplicationWindow/MainWindow.ui
+        ApplicationWindow/TaskList.cpp ApplicationWindow/TaskList.h ApplicationWindow/TaskList.ui
+        ApplicationWindow/ListItem.cpp ApplicationWindow/ListItem.h
+        AddUpdateWindow/DialogWindow.cpp AddUpdateWindow/DialogWindow.h AddUpdateWindow/DialogWindow.ui
         FileControl/FileController.cpp FileControl/FileController.h
         DatabaseHandlerFiles/DatabaseHandler.cpp DatabaseHandlerFiles/DatabaseHandler.h
         DatabaseHandlerFiles/DatabaseItem.cpp DatabaseHandlerFiles/DatabaseItem.h)
