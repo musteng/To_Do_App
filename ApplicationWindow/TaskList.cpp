@@ -32,11 +32,11 @@ TaskList::TaskList(QWidget *parent)
                         "QListView::item:hover { background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
                                 "stop: 0 #00ffde, stop: 1 #414fd1)}");
 
-    FileController::fileRead(listItemVector);
-    //itemVectorToList(listItemVector); // used to read from file to app list
-    //dbData = databaseHandler.getData();
-    //this->databaseToList(dbData);
-    this->dBtoList(databaseHandler.getDBKeys());
+    this->databaseToList(databaseHandler.getDBKeys());
+
+    //Uncomment when file read and write is used rather than database operation.
+    //FileController::fileRead(listItemVector);
+    //itemVectorToList(listItemVector);
 }
 
 
@@ -53,6 +53,10 @@ void TaskList::handleAddButton() {
         databaseHandler.listItemDB->priorityLevel = dialogWindow.priorityLevel.currentText();
         databaseHandler.postData();
         this->addItem(databaseHandler.getSingleData(databaseHandler.listItemDB->dbID));
+        this->clearSelection();
+
+        /*
+        //These lines are used when file read and write is used.
 
         item = new ListItem;
         unsigned int uniqueTime = QDateTime::currentSecsSinceEpoch();
@@ -62,7 +66,7 @@ void TaskList::handleAddButton() {
                         dialogWindow.endingTime.text(),
                         dialogWindow.priorityLevel.currentText());
         FileController::fileWrite(listItemVector);
-        this->clearSelection();
+         */
     }
 }
 
@@ -71,15 +75,21 @@ void TaskList::handleDeleteButton() {
     int selectedIndex = this->currentRow();
 
     if (selectedIndex != -1) {
-        delete listItemVector[selectedIndex];
-        listItemVector[selectedIndex] = nullptr;
-
-        listItemVector.erase(listItemVector.begin() + selectedIndex);
         this->takeItem(selectedIndex);
         this->clearSelection();
 
         databaseHandler.deleteData(selectedIndex);
+
+        /*
+        //These lines are used when file read and write is used.
+
+        delete listItemVector[selectedIndex];
+        listItemVector[selectedIndex] = nullptr;
+
+        listItemVector.erase(listItemVector.begin() + selectedIndex);
         FileController::fileWrite(listItemVector);
+
+        */
     }
 }
 
@@ -88,14 +98,13 @@ void TaskList::handleUpdateButton() {
     DialogWindow dialogWindow("Update Task");
     bool ok;
     int selectedRowNo = this->currentRow();
-    ListItem* selectedItem;
-    DatabaseItem* selectedItemDBVector;
+    // ListItem* selectedItem; // File write and read related.
 
     if( selectedRowNo != -1) {
-        selectedItem = listItemVector[selectedRowNo];
-        //selectedItemDBVector = databaseHandler.listItemVectorDB[selectedRowNo];
+        // selectedItem = listItemVector[selectedRowNo]; // File write and read related.
+
         QString key = databaseHandler.dbKeys[selectedRowNo];
-        QUrl itemUrl = "https://todoapp2-f922b-default-rtdb.europe-west1.firebasedatabase.app/ItemList/" + key + ".json";
+        QUrl itemUrl = databaseHandler.dbUrl + key + ".json";
         QNetworkAccessManager networkAccessManager;
         QNetworkRequest getElementRequest = QNetworkRequest(itemUrl);
         QNetworkReply* networkReply = networkAccessManager.get(getElementRequest);
@@ -121,14 +130,7 @@ void TaskList::handleUpdateButton() {
                                                dateValues[1].toInt(&ok, 10),
                                                dateValues[0].toInt(&ok, 10)));
         dialogWindow.priorityLevel.setCurrentText(userInputPriority);
-        /*
-        dialogWindow.inputText.setText(selectedItemDBVector->userInput);
-        QStringList dateValues = selectedItemDBVector->endingDate.split('.');
-        dialogWindow.endingTime.setDate( QDate(dateValues[2].toInt(&ok, 10),
-                                                    dateValues[1].toInt(&ok, 10),
-                                                    dateValues[0].toInt(&ok, 10)));
-        dialogWindow.priorityLevel.setCurrentText(selectedItemDBVector->priorityLevel);
-*/
+
         if (dialogWindow.exec() == QDialog::Accepted){
             databaseHandler.listItemDB = new DatabaseItem();
             databaseHandler.listItemDB->userInput = dialogWindow.inputText.text();
@@ -136,77 +138,26 @@ void TaskList::handleUpdateButton() {
             databaseHandler.listItemDB->priorityLevel = dialogWindow.priorityLevel.currentText();
             databaseHandler.updateData(selectedRowNo);
 
-            TaskList::updateVectorItem(listItemVector, selectedRowNo, dialogWindow);
             this->insertItem(selectedRowNo, this->databaseHandler.getSingleData(key));
             this->takeItem(selectedRowNo + 1);
             this->clearSelection();
-            FileController::fileWrite(listItemVector);
+
+            //TaskList::updateVectorItem(listItemVector, selectedRowNo, dialogWindow);  // File write and read related.
+            //FileController::fileWrite(listItemVector);  // File write and read related.
         }
     }
 }
 
 
-void TaskList::mouseDoubleClickEvent(QMouseEvent *event) {
-    this->clearSelection();
-    //TODO one click
-}
-
-
-void TaskList::itemVectorToList(const std::vector<ListItem*>& itemVector){
-    QString userInputText;
-    QString userInputDate;
-    QString userInputPriority;
-    QString userInput;
-
-    for(ListItem* element : itemVector){
-        userInputText = element->userInput;
-        userInputDate = element->endDate;
-        userInputPriority = element->importance ;
-        userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
-        this->addItem(userInput);
-    }
-}
-
-
-void TaskList::addItemToVector(ListItem* addedItem, unsigned int id, QString userInput, QString endingTime, QString priorityLevel) {
-    addedItem->itemId = id;
-    addedItem->userInput = std::move(userInput);
-    addedItem->endDate = std::move(endingTime);
-    addedItem->importance = std::move(priorityLevel);
-    listItemVector.push_back(addedItem);
-}
-
-
-void TaskList::updateVectorItem(const std::vector<ListItem*>& itemVector, int selectedRow,const DialogWindow& dialogWindow) {
-    itemVector[selectedRow]->userInput = dialogWindow.inputText.text();
-    itemVector[selectedRow]->endDate = dialogWindow.endingTime.text();
-    itemVector[selectedRow]->importance = dialogWindow.priorityLevel.currentText();
-}
-
-
-void TaskList::databaseToList(const std::vector<DatabaseItem*>& dbItemList) {
-    QString userInputText;
-    QString userInputDate;
-    QString userInputPriority;
-    QString userInput;
-
-    for(DatabaseItem* itemInVector : dbItemList){
-        userInputText = itemInVector->userInput;
-        userInputDate = itemInVector->endingDate;
-        userInputPriority = itemInVector->priorityLevel;
-        userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
-        this->addItem(userInput);
-    }
-}
-
-void TaskList::dBtoList(const std::vector<QString>& dbKeys) {
+// This function is used to transfer items from database to application window at opening.
+void TaskList::databaseToList(const std::vector<QString>& dbKeys) {
     QString userInputText;
     QString userInputDate;
     QString userInputPriority;
     QString userInput;
 
     for(const QString& key : dbKeys){
-        QUrl itemUrl = "https://todoapp2-f922b-default-rtdb.europe-west1.firebasedatabase.app/ItemList/" + key + ".json";
+        QUrl itemUrl = databaseHandler.dbUrl + key + ".json";
         QNetworkAccessManager networkAccessManager;
         QNetworkRequest getElementRequest = QNetworkRequest(itemUrl);
         QNetworkReply* networkReply = networkAccessManager.get(getElementRequest);
@@ -228,3 +179,50 @@ void TaskList::dBtoList(const std::vector<QString>& dbKeys) {
         delete networkReply;
     }
 }
+
+
+void TaskList::mouseDoubleClickEvent(QMouseEvent *event) {
+    this->clearSelection(); // Clear row when clicked twice.
+}
+
+
+/**
+ * These below functions (itemVectorToList, addItemToVector, updateVectorItem) are used when file read and write is operational.
+ */
+
+
+/*
+// This function is used to transfer tasks from file to application window.
+void TaskList::itemVectorToList(const std::vector<ListItem*>& itemVector){
+    QString userInputText;
+    QString userInputDate;
+    QString userInputPriority;
+    QString userInput;
+
+    for(ListItem* element : itemVector){
+        userInputText = element->userInput;
+        userInputDate = element->endDate;
+        userInputPriority = element->importance ;
+        userInput = userInputText + "\n" + userInputDate + "\n" + userInputPriority;
+        this->addItem(userInput);
+    }
+}
+
+
+// This function is used to append last added item to item vector.
+void TaskList::addItemToVector(ListItem* addedItem, unsigned int id, QString userInput, QString endingTime, QString priorityLevel) {
+    addedItem->itemId = id;
+    addedItem->userInput = std::move(userInput);
+    addedItem->endDate = std::move(endingTime);
+    addedItem->importance = std::move(priorityLevel);
+    listItemVector.push_back(addedItem);
+}
+
+
+// This function is used to update last updated item in the item vector.
+void TaskList::updateVectorItem(const std::vector<ListItem*>& itemVector, int selectedRow,const DialogWindow& dialogWindow) {
+    itemVector[selectedRow]->userInput = dialogWindow.inputText.text();
+    itemVector[selectedRow]->endDate = dialogWindow.endingTime.text();
+    itemVector[selectedRow]->importance = dialogWindow.priorityLevel.currentText();
+}
+*/

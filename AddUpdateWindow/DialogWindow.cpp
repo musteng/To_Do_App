@@ -7,9 +7,8 @@
 #include "DialogWindow.h"
 
 
-DialogWindow::DialogWindow(QWidget *parent)
-    : QDialog(parent)
-    , form(this)
+DialogWindow::DialogWindow(const QString& title)
+    : form(this)
     , labelText(this)
     , inputText(this)
     , labelDate(this)
@@ -17,13 +16,6 @@ DialogWindow::DialogWindow(QWidget *parent)
     , labelImportance(this)
     , priorityLevel(this)
 {
-}
-
-DialogWindow::~DialogWindow() {
-    delete buttonBox;
-}
-
-DialogWindow::DialogWindow(QString title) {
     this->setWindowTitle(title);
     this->setModal(true);
 
@@ -56,4 +48,9 @@ DialogWindow::DialogWindow(QString title) {
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     this->setLayout(&form);
+}
+
+
+DialogWindow::~DialogWindow() {
+    delete buttonBox;
 }

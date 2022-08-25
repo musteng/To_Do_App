@@ -30,14 +30,8 @@ public:
     void handleAddButton();
     void handleDeleteButton();
     void handleUpdateButton();
-    void addItemToVector(ListItem* addedItem, unsigned int id, QString userInput, QString endingTime, QString priorityLevel);
-    static void updateVectorItem(const std::vector<ListItem*>& itemVector, int selectedRow, const DialogWindow& dialogWindow);
-    void databaseToList(const std::vector<DatabaseItem*>& dbItemList);
-    void itemVectorToList(const std::vector<ListItem*>& listItemVector); // Used to read from file and transfer items to list
+    void databaseToList(const std::vector<QString>& dbKeys);
     void mouseDoubleClickEvent(QMouseEvent* event) override;
-    void dBtoList(const std::vector<QString>& dbKeys);
-
-    std::vector<ListItem*> listItemVector;
 
 private:
     int positionX;
@@ -46,11 +40,23 @@ private:
     int windowHeight;
     int fontSize;
     QFont font;
+    DatabaseHandler databaseHandler;
+
+    /*
+     * These functions and data structures are used to operate file writing and file reading related operations.
+     * And only meaningful when file read and write are preferred rather than database usage.
+
+public:
+    void addItemToVector(ListItem* addedItem, unsigned int id, QString userInput, QString endingTime, QString priorityLevel);
+    static void updateVectorItem(const std::vector<ListItem*>& itemVector, int selectedRow, const DialogWindow& dialogWindow);
+    void itemVectorToList(const std::vector<ListItem*>& listItemVector);
+    std::vector<ListItem*> listItemVector;
 
 private:
     ListItem* item;
-    DatabaseHandler databaseHandler;
     std::vector<DatabaseItem*> dbData;
+
+     */
 };
 
 

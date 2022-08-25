@@ -23,7 +23,6 @@ public:
     ~DatabaseHandler() override;
 
 public:
-    std::vector<DatabaseItem*> getData();
     void postData();
     void updateData(int selectedRowNumber);
     void deleteData(int selectedRowNumber);
@@ -32,8 +31,8 @@ public:
 
 public:
     DatabaseItem* listItemDB;
-    std::vector<DatabaseItem*> listItemVectorDB;
     std::vector<QString> dbKeys;
+    QString dbUrl;
 
 private:
     QNetworkAccessManager networkAccessManager;
@@ -41,7 +40,6 @@ private:
     QVariantMap newDatabaseElement;
     QJsonDocument jsonData;
     QEventLoop eventLoop;
-    QUrl dbUrl;
 };
 
 
